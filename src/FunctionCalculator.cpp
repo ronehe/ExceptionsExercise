@@ -94,15 +94,32 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-    unsigned int newSize;
-    m_istr >> newSize;
-    m_functions.resize(newSize);
+    try {
+        unsigned int newSize;
+        m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+        m_istr >> newSize;
+        if (newSize < 2 || newSize > 100)
+            throw std::out_of_range("Invalid size: can be resized only to values between 2 and 100, please enter a number again: ");
+        m_functions.resize(newSize);
+    }
+    catch (std::out_of_range& e) {
+        m_ostr << e.what() << std::endl;
+        this->resize();
+    }
+    catch (std::ios_base::failure& e) {
+        m_ostr << "invalid input, Please enter a number again: " << std::endl;
+        m_istr.clear();
+        auto s = std::string();
+        std::getline(m_istr, s);
+        this->resize();
+    }
 }
 void FunctionCalculator::printFunctions() const
 {
     m_ostr << "List of available gates:\n";
     for (decltype(m_functions.size()) i = 0; i < m_functions.size(); ++i)
     {
+        if (m_functions[i] == nullptr) break;
         m_ostr << i << ".\t" << m_functions[i]->to_string("x") << '\n';
     }
     m_ostr << '\n';
@@ -138,28 +155,40 @@ FunctionCalculator::Action FunctionCalculator::readAction() const
 
 void FunctionCalculator::runAction(Action action)
 {
-    switch (action)
-    {
-        default:
-            m_ostr << "Unknown enum entry used!\n";
-            break;
+    try{
+        switch (action)
+        {
+			default:
+				m_ostr << "Unknown enum entry used!\n";
+				break;
 
-        case Action::Invalid:
-            m_ostr << "Command not found\n";
-            break;
+			case Action::Invalid:
+				m_ostr << "Command not found\n";
+				break;
 
-        case Action::Eval: eval();             break;
-        case Action::Poly: poly();             break;
-        case Action::Mul:  binaryFunc<Mul>();  break;
-        case Action::Add:  binaryFunc<Add>();  break;
-        case Action::Comp: binaryFunc<Comp>(); break;
-        case Action::Log:  log();              break;
-        case Action::Del:  del();              break;
-        case Action::Help: help();             break;
-        case Action::Exit: exit();             break;
-        case Action::Resize: resize();                 break;
+			case Action::Eval: eval();             break;
+			case Action::Poly: poly();             break;
+			case Action::Mul:  binaryFunc<Mul>();  break;
+			case Action::Add:  binaryFunc<Add>();  break;
+			case Action::Comp: binaryFunc<Comp>(); break;
+			case Action::Log:  log();              break;
+			case Action::Del:  del();              break;
+			case Action::Help: help();             break;
+			case Action::Exit: exit();             break;
+			case Action::Resize: resize();         break;
+        }
+    }
+    catch (std::out_of_range& e) {
+        m_ostr << e.what() << std::endl;
+    }
+    catch (std::ios_base::failure& e) {
+        m_istr.clear();
+        auto s = std::string(); //for removing unwanted character from buffer
+        std::getline(m_istr, s);
+        m_ostr << e.what() << std::endl;
     }
 }
+
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
 {
