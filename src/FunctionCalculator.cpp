@@ -92,6 +92,12 @@ void FunctionCalculator::exit()
     m_running = false;
 }
 
+void FunctionCalculator::resize()
+{
+    unsigned int newSize;
+    m_istr >> newSize;
+    m_functions.resize(newSize);
+}
 void FunctionCalculator::printFunctions() const
 {
     m_ostr << "List of available gates:\n";
@@ -151,6 +157,7 @@ void FunctionCalculator::runAction(Action action)
         case Action::Del:  del();              break;
         case Action::Help: help();             break;
         case Action::Exit: exit();             break;
+        case Action::Resize: resize();                 break;
     }
 }
 
@@ -205,6 +212,11 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
             "exit",
             " - exit the program",
             Action::Exit
+        },
+        {
+            "resize",
+            " -resize the size of the list",
+            Action::Resize
         }
     };
 }

@@ -21,6 +21,7 @@ private:
     void del();
     void help();
     void exit();
+    void resize();
 
     template <typename FuncType>
     void binaryFunc()
@@ -45,6 +46,7 @@ private:
         Del,
         Help,
         Exit,
+        Resize,
     };
 
     struct ActionDetails
