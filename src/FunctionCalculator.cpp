@@ -13,8 +13,6 @@
 #include <iomanip>
 #include <sstream>
 
-#include <Validator.h>
-
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(istr), m_ostr(ostr)
 {
@@ -105,12 +103,8 @@ void FunctionCalculator::resize()
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else  
             if (newSize < m_functions.size()) {
-                auto validator = Validator<char>();
-                auto ans = validator(y_n_catcher);
-                if (ans == 'y') {
-                    m_maxFunctions = newSize;
-                    m_functions.resize(m_maxFunctions);
-                }
+                y_n_catcher(newSize);
+
             }
             else
                 m_maxFunctions = newSize;
@@ -129,13 +123,28 @@ void FunctionCalculator::resize()
     }
 }
 
-void FunctionCalculator::y_n_catcher() {
+void FunctionCalculator::y_n_catcher(unsigned int newSize) {
     char ans;
-	m_ostr << "the operation might delete some fucntions do you want to continue ? y/n";
-	m_istr >> ans;
-	if (ans != 'y' && ans != 'n') {
-		throw std::invalid_argument("the requested answer is either y or n");
-	}
+    auto ansIsStupid = true;
+    while (ansIsStupid) {
+        try {
+            m_ostr << "the operation might delete some fucntions do you want to continue ? y/n";
+            m_istr >> ans;
+            if (ans != 'y' && ans != 'n') {
+                throw std::invalid_argument("the requested answer is either y or n");
+            }
+            else
+                if (ans == 'y') {
+                    m_maxFunctions = newSize;
+                    m_functions.resize(m_maxFunctions);
+                }
+        }
+        catch (std::invalid_argument& e) {
+            
+            continue;
+        }
+        break;
+    }
 }
 
 
