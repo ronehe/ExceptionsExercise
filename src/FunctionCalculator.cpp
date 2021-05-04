@@ -55,7 +55,9 @@ void FunctionCalculator::poly()
     {
         m_istr >> coeff;
     }
-    m_functions.push_back(std::make_shared<Poly>(coeffs));
+    (m_maxFunctions > m_functions.size()) ?
+        m_functions.push_back(std::make_shared<Poly>(coeffs)) :
+        throw MaximumFunctionsException();
 }
 
 void FunctionCalculator::log()
@@ -64,7 +66,9 @@ void FunctionCalculator::log()
     m_istr >> base;
     if (auto f = readFunctionIndex(); f)
     {
-        m_functions.push_back(std::make_shared<Log>(base, m_functions[*f]));
+        (m_maxFunctions > m_functions.size()) ?
+            m_functions.push_back(std::make_shared<Log>(base, m_functions[*f])) :
+            throw MaximumFunctionsException();
     }
 }
 
@@ -94,6 +98,7 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
+    char ans;
     try {
         unsigned int newSize;
         m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
@@ -103,14 +108,15 @@ void FunctionCalculator::resize()
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else  
             if (newSize < m_functions.size()) {
-                y_n_catcher(newSize);
-
-
+                ans = y_n_catcher();
+                if (ans == 'y') {
+                    m_maxFunctions = newSize;
+                    m_functions.resize(m_maxFunctions);
+                }
             }
             else
                 m_maxFunctions = newSize;
         }
-    
     catch (std::out_of_range& e) {
         m_ostr << e.what() << std::endl;
         this->resize();
@@ -118,13 +124,11 @@ void FunctionCalculator::resize()
     catch (std::ios_base::failure& e) {
         m_ostr << "invalid input, Please enter a number again: " << std::endl;
         m_istr.clear();
-        auto s = std::string();
-        std::getline(m_istr, s);
         this->resize();
     }
 }
 
-void FunctionCalculator::y_n_catcher(unsigned int newSize) {
+char FunctionCalculator::y_n_catcher() {
     char ans;
     auto ansIsStupid = true;
     while (ansIsStupid) {
@@ -134,17 +138,11 @@ void FunctionCalculator::y_n_catcher(unsigned int newSize) {
             if (ans != 'y' && ans != 'n') {
                 throw std::invalid_argument("the requested answer is either y or n");
             }
-            else
-                if (ans == 'y') {
-                    m_maxFunctions = newSize;
-                    m_functions.resize(m_maxFunctions);
-                }
         }
         catch (std::invalid_argument& e) {
-            
             continue;
         }
-        break;
+        return ans;
     }
 }
 
@@ -221,6 +219,15 @@ void FunctionCalculator::runAction(Action action)
         auto s = std::string(); //for removing unwanted character from buffer
         std::getline(m_istr, s);
         m_ostr << e.what() << std::endl;
+    }
+
+    catch (MaximumFunctionsException& e) {
+        char y_n;
+        m_ostr << e.what() << std::endl;
+        y_n = y_n_catcher();
+        if (y_n == 'y') {
+            del();
+        }
     }
 }
 

@@ -6,6 +6,8 @@
 #include <iosfwd>
 #include <optional>
 
+#include <MaximumFunctionsException.h>
+
 class Function;
 
 class FunctionCalculator
@@ -28,7 +30,9 @@ private:
     {
         if (auto f0 = readFunctionIndex(), f1 = readFunctionIndex(); f0 && f1)
         {
-            m_functions.push_back(std::make_shared<FuncType>(m_functions[*f0], m_functions[*f1]));
+            (m_functions.size() < m_maxFunctions) ?
+                (m_functions.push_back(std::make_shared<FuncType>(m_functions[*f0], m_functions[*f1]))) :
+                throw MaximumFunctionsException();
         }
     }
 
@@ -79,13 +83,12 @@ private:
 //~~~~~~~~~~~~~~functions~~~~~~~~~~~~~~~~~~~~~~~~
 
 private:
-    void y_n_catcher(unsigned int);
+    char y_n_catcher();
 
 
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
 private:
     unsigned int m_maxFunctions = 100;
-
 };
 
