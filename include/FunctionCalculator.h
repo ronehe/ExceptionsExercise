@@ -24,6 +24,7 @@ private:
     void help();
     void exit();
     void resize();
+    void read();
 
     template <typename FuncType>
     void binaryFunc()
@@ -51,6 +52,7 @@ private:
         Help,
         Exit,
         Resize,
+        Read,
     };
 
     struct ActionDetails

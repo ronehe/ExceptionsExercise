@@ -198,16 +198,19 @@ void FunctionCalculator::runAction(Action action)
 				m_ostr << "Command not found\n";
 				break;
 
-			case Action::Eval: eval();             break;
-			case Action::Poly: poly();             break;
-			case Action::Mul:  binaryFunc<Mul>();  break;
-			case Action::Add:  binaryFunc<Add>();  break;
-			case Action::Comp: binaryFunc<Comp>(); break;
-			case Action::Log:  log();              break;
-			case Action::Del:  del();              break;
-			case Action::Help: help();             break;
-			case Action::Exit: exit();             break;
-			case Action::Resize: resize();         break;
+			case Action::Eval:   eval();             break;
+			case Action::Poly:   poly();             break;
+			case Action::Mul:    binaryFunc<Mul>();  break;
+			case Action::Add:    binaryFunc<Add>();  break;
+			case Action::Comp:   binaryFunc<Comp>(); break;
+			case Action::Log:    log();              break;
+			case Action::Del:    del();              break;
+			case Action::Help:   help();             break;
+			case Action::Exit:   exit();             break;
+			case Action::Resize: resize();           break;
+            case Action::Read:   read();             break;
+
+
         }
     }
     catch (std::out_of_range& e) {
@@ -287,6 +290,11 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
             "resize",
             " -resize the size of the list",
             Action::Resize
+        },
+        {
+            "read",
+            " -read from file",
+            Action::Read
         }
     };
 }
