@@ -108,8 +108,7 @@ void FunctionCalculator::resize()
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else  
             if (newSize < m_functions.size()) {
-                ans = y_n_catcher();
-                if (ans == 'y') {
+                if (y_n_catcher()) {
                     m_maxFunctions = newSize;
                     m_functions.resize(m_maxFunctions);
                 }
@@ -128,7 +127,7 @@ void FunctionCalculator::resize()
     }
 }
 
-char FunctionCalculator::y_n_catcher() {
+bool FunctionCalculator::y_n_catcher() {
     char ans;
     auto ansIsStupid = true;
     while (ansIsStupid) {
@@ -224,8 +223,8 @@ void FunctionCalculator::runAction(Action action)
     catch (MaximumFunctionsException& e) {
         char y_n;
         m_ostr << e.what() << std::endl;
-        y_n = y_n_catcher();
-        if (y_n == 'y') {
+        if (y_n_catcher()) {
+            m_ostr << "Please enter a function to delete: ";
             del();
         }
     }

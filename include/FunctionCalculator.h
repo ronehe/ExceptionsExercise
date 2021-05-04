@@ -83,9 +83,7 @@ private:
 //~~~~~~~~~~~~~~functions~~~~~~~~~~~~~~~~~~~~~~~~
 
 private:
-    char y_n_catcher();
-
-
+    bool y_n_catcher();
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
 private:
