@@ -71,4 +71,21 @@ private:
 
     static ActionMap createActions();
     static FunctionList createFunctions();
+
+
+//---------------changes-------------------------//
+
+
+//~~~~~~~~~~~~~~functions~~~~~~~~~~~~~~~~~~~~~~~~
+
+private:
+    void y_n_catcher(unsigned int);
+
+
+
+//~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
+private:
+    unsigned int m_maxFunctions = 100;
+
 };
+

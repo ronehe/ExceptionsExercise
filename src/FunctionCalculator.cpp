@@ -100,8 +100,16 @@ void FunctionCalculator::resize()
         m_istr >> newSize;
         if (newSize < 2 || newSize > 100)
             throw std::out_of_range("Invalid size: can be resized only to values between 2 and 100, please enter a number again: ");
-        m_functions.resize(newSize);
-    }
+        if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
+        else  
+            if (newSize < m_functions.size()) {
+                y_n_catcher(newSize);
+
+            }
+            else
+                m_maxFunctions = newSize;
+        }
+    
     catch (std::out_of_range& e) {
         m_ostr << e.what() << std::endl;
         this->resize();
@@ -114,6 +122,32 @@ void FunctionCalculator::resize()
         this->resize();
     }
 }
+
+void FunctionCalculator::y_n_catcher(unsigned int newSize) {
+    char ans;
+    auto ansIsStupid = true;
+    while (ansIsStupid) {
+        try {
+            m_ostr << "the operation might delete some fucntions do you want to continue ? y/n";
+            m_istr >> ans;
+            if (ans != 'y' && ans != 'n') {
+                throw std::invalid_argument("the requested answer is either y or n");
+            }
+            else
+                if (ans == 'y') {
+                    m_maxFunctions = newSize;
+                    m_functions.resize(m_maxFunctions);
+                }
+        }
+        catch (std::invalid_argument& e) {
+            
+            continue;
+        }
+        break;
+    }
+}
+
+
 void FunctionCalculator::printFunctions() const
 {
     m_ostr << "List of available gates:\n";
