@@ -105,6 +105,7 @@ void FunctionCalculator::resize()
             if (newSize < m_functions.size()) {
                 y_n_catcher(newSize);
 
+
             }
             else
                 m_maxFunctions = newSize;
