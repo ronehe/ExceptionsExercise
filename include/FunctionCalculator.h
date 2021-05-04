@@ -79,7 +79,7 @@ private:
 //~~~~~~~~~~~~~~functions~~~~~~~~~~~~~~~~~~~~~~~~
 
 private:
-    char y_n_catcher();
+    void y_n_catcher();
 
 
 

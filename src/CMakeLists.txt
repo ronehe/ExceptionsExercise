@@ -2,6 +2,7 @@
                                   "FunctionCalculator.cpp"
                                   "Function.cpp"
                                   "Sin.cpp"
+                                  "Validator.cpp"
                                   "Ln.cpp"
                                   "Poly.cpp"
                                   "Mul.cpp"
