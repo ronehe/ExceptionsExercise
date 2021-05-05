@@ -103,7 +103,7 @@ void FunctionCalculator::resize()
     char ans;
     try {
         unsigned int newSize;
-        m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
+        //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         m_istr >> newSize;
         if (newSize < 2 || newSize > 100)
             throw std::out_of_range("Invalid size: can be resized only to values between 2 and 100, please enter a number again: ");

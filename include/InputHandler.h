@@ -8,16 +8,14 @@ public:
 	
 	//addStream(streamObj& istr);
 	template<typename T>
-	friend InputHandler& operator>>(InputHandler &, T &);
+	friend void operator>>(const InputHandler &, T &);
 private:
-
 	std::stack<streamObj*>m_streams;
 
 };
 /// global operator >>  for handling the top of the stack which is the current stream  
 template<typename T>
-InputHandler& operator>>(InputHandler&cur, T &into ){
+void operator>>(const InputHandler&cur, T &into ){
 	*(cur.m_streams.top()) >> into;
-	return cur;
 }
 

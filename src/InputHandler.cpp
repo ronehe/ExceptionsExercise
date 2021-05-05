@@ -1,6 +1,5 @@
 #include <InputHandler.h>
-InputHandler::InputHandler(std::istream& istr) {
+InputHandler::InputHandler(streamObj& istr) {
 	m_streams.push(&istr);
 }
-
 
