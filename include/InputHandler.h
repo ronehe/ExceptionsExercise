@@ -6,7 +6,7 @@ public:
 
 	InputHandler(streamObj& istr);
 	
-	//addStream(streamObj& istr);
+	void addStream(streamObj& istr);
 	template<typename T>
 	friend void operator>>(const InputHandler &, T &);
 private:

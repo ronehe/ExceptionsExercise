@@ -10,6 +10,7 @@
 
 
 #include <istream>
+#include <iostream>
 #include <ostream>
 #include <iomanip>
 #include <sstream>
@@ -234,7 +235,11 @@ void FunctionCalculator::runAction(Action action)
 }
 
 void FunctionCalculator::read() {
-
+    auto fileName=std::string();
+    m_istr >> fileName;
+    std::ifstream newF;//file pointer
+    newF.open(fileName);
+    m_istr.addStream(newF);
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
