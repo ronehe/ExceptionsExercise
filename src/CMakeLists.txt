@@ -1,5 +1,6 @@
 ﻿target_sources (oop2_ex01 PRIVATE "main.cpp"
                                   "FunctionCalculator.cpp"
+                                  "InputHandler.cpp"
                                   "Function.cpp"
                                   "Sin.cpp"
                                   "Ln.cpp"

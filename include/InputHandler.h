@@ -1,25 +1,23 @@
-#pragma once
-#include <exception>
-#include <functional>
-
-template<typename T>
-class Validator {
+#include<fstream>
+#include<stack>
+typedef std::istream streamObj;
+class InputHandler {
 public:
-	T operator()(std::function<void()>);
-};
 
-template <typename T>
-T Validator<T>::operator()(std::function<void()> func) {
-    T ans;
-    auto ansIsStupid = true;
-    while (ansIsStupid) {
-        try {
-            func();
-        }
-        catch (std::exception& e) {
-            m_istr.clear();
-            continue;
-        }
-        return ans;
-    }
+	InputHandler(streamObj& istr);
+	
+	//addStream(streamObj& istr);
+	template<typename T>
+	friend InputHandler& operator>>(InputHandler &, T &);
+private:
+
+	std::stack<streamObj*>m_streams;
+
+};
+/// global operator >>  for handling the top of the stack which is the current stream  
+template<typename T>
+InputHandler& operator>>(InputHandler&cur, T &into ){
+	*(cur.m_streams.top()) >> into;
+	return cur;
 }
+

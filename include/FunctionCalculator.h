@@ -1,5 +1,5 @@
 #pragma once
-
+#include "InputHandler.h"
 #include <vector>
 #include <memory>
 #include <string>
@@ -67,7 +67,8 @@ private:
     const ActionMap m_actions;
     FunctionList m_functions;
     bool m_running = true;
-    std::istream& m_istr;
+    //std::istream& m_istr;
+    InputHandler m_istr;
     std::ostream& m_ostr;
 
     std::optional<int> readFunctionIndex() const;

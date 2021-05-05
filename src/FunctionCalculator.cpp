@@ -8,6 +8,7 @@
 #include "Comp.h"
 #include "Log.h"
 
+
 #include <istream>
 #include <ostream>
 #include <iomanip>
@@ -123,7 +124,7 @@ void FunctionCalculator::resize()
     }
     catch (std::ios_base::failure& e) {
         m_ostr << "invalid input, Please enter a number again: " << std::endl;
-        m_istr.clear();
+      //  m_istr.clear();
         this->resize();
     }
 }
@@ -216,9 +217,9 @@ void FunctionCalculator::runAction(Action action)
         m_ostr << e.what() << std::endl;
     }
     catch (std::ios_base::failure& e) {
-        m_istr.clear();
+       // m_istr.clear();
         auto s = std::string(); //for removing unwanted character from buffer
-        std::getline(m_istr, s);
+        //std::getline(m_istr, s);
         m_ostr << e.what() << std::endl;
     }
 
@@ -233,15 +234,7 @@ void FunctionCalculator::runAction(Action action)
 }
 
 void FunctionCalculator::read() {
-    auto fileName = std::string();
-    //m_istr >> fileName;
-    auto* backup = m_istr.rdbuf();
-    auto file = std::ifstream();
-    file.open("Commands.txt", std::ifstream::in);
-    if (file.is_open()) {
-        m_ostr << "is open";
-    }
-    m_istr.rdbuf(file.rdbuf());
+
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
