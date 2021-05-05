@@ -239,7 +239,7 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream *newF  =new std::ifstream ;//file pointer
     newF->open(fileName);
-        m_istr.addStream(*newF);
+    m_istr.addStream(*newF);
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
