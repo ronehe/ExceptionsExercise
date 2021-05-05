@@ -239,6 +239,9 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream newF;//file pointer
     newF.open(fileName);
+    if (newF.is_open()) {
+        std::cout << "yessssssss";
+    }
     m_istr.addStream(newF);
 }
 
