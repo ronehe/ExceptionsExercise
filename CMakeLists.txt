@@ -13,3 +13,4 @@ add_executable (oop2_ex01)
 
 add_subdirectory (include)
 add_subdirectory (src)
+add_subdirectory (resources)

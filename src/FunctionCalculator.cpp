@@ -12,6 +12,7 @@
 #include <ostream>
 #include <iomanip>
 #include <sstream>
+#include <fstream>
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(istr), m_ostr(ostr)
@@ -209,8 +210,6 @@ void FunctionCalculator::runAction(Action action)
 			case Action::Exit:   exit();             break;
 			case Action::Resize: resize();           break;
             case Action::Read:   read();             break;
-
-
         }
     }
     catch (std::out_of_range& e) {
@@ -233,6 +232,17 @@ void FunctionCalculator::runAction(Action action)
     }
 }
 
+void FunctionCalculator::read() {
+    auto fileName = std::string();
+    //m_istr >> fileName;
+    auto* backup = m_istr.rdbuf();
+    auto file = std::ifstream();
+    file.open("Commands.txt", std::ifstream::in);
+    if (file.is_open()) {
+        m_ostr << "is open";
+    }
+    m_istr.rdbuf(file.rdbuf());
+}
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
 {

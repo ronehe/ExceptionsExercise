@@ -24,7 +24,6 @@ private:
     void help();
     void exit();
     void resize();
-    void read();
 
     template <typename FuncType>
     void binaryFunc()
@@ -86,6 +85,7 @@ private:
 
 private:
     bool y_n_catcher();
+    void read();
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
 private:
