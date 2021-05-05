@@ -17,7 +17,7 @@
 #include <fstream>
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
-    : m_actions(createActions()), m_functions(createFunctions()), m_istr(istr), m_ostr(ostr)
+    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(istr)), m_ostr(ostr)
 {
 }
 
@@ -218,10 +218,7 @@ void FunctionCalculator::runAction(Action action)
         m_ostr << e.what() << std::endl;
     }
     catch (std::ios_base::failure& e) {
-       // m_istr.clear();
-        auto s = std::string(); //for removing unwanted character from buffer
-        //std::getline(m_istr, s);
-        m_ostr << e.what() << std::endl;
+        m_istr.handleEOF();
     }
 
     catch (MaximumFunctionsException& e) {
