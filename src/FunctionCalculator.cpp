@@ -31,8 +31,37 @@ void FunctionCalculator::run()
             printFunctions();
             m_ostr << "Enter command ('help' for the list of available commands): ";
         }
-        const auto action = readAction();
-        runAction(action);
+        try {
+            const auto action = readAction();
+            runAction(action);
+        }
+
+       
+        catch (std::out_of_range& e) {
+            m_ostr << e.what() << std::endl;
+        }
+
+
+        catch (MaximumFunctionsException& e) {
+            m_ostr << e.what() << std::endl;
+            if (y_n_catcher()) {
+                m_ostr << "Please enter a function to delete: ";
+                del();
+            }
+        }
+
+        catch (std::invalid_argument::exception &e) {
+            //first we check if it is a file
+            if (!m_istr.isCin()) {
+                std::string cur;
+                m_ostr <<"error : \n" <<m_istr.getLineRead()<<"\n";
+                m_ostr << " would you like to continue reading ? ";
+                std::cin >> cur;
+            }
+            m_ostr << e.what();
+
+        }
+        
     } while (m_running);
 }
 
@@ -69,6 +98,7 @@ void FunctionCalculator::log()
 {
     auto base = 0;
     m_istr >> base;
+    if (base <=1)throw std::invalid_argument::exception("base of log suppose to be higher then one");
     if (auto f = readFunctionIndex(); f)
     {
         (m_maxFunctions > m_functions.size()) ?
@@ -197,7 +227,7 @@ FunctionCalculator::Action FunctionCalculator::readAction() const
 
 void FunctionCalculator::runAction(Action action)
 {
-    try{
+    
         switch (action)
         {
 			default:
@@ -206,6 +236,7 @@ void FunctionCalculator::runAction(Action action)
 
 			case Action::Invalid:
 				m_ostr << "Command not found\n";
+                throw std::invalid_argument::exception();
 				break;
 
 			case Action::Eval:   eval();             break;
@@ -220,19 +251,8 @@ void FunctionCalculator::runAction(Action action)
 			case Action::Resize: resize();           break;
             case Action::Read:   read();             break;
         }
-    }
-    catch (std::out_of_range& e) {
-        m_ostr << e.what() << std::endl;
-    }
-  
-
-    catch (MaximumFunctionsException& e) {
-        m_ostr << e.what() << std::endl;
-        if (y_n_catcher()) {
-            m_ostr << "Please enter a function to delete: ";
-            del();
-        }
-    }
+    
+   
 }
 
 void FunctionCalculator::read() {

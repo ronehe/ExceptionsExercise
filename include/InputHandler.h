@@ -16,6 +16,7 @@ public:
 	bool isCin() const;
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
+	std::string getLineRead() const;
 private:
 	std::stack<streamObj*>* m_streams;
 	std::stringstream* m_curLineRead;

@@ -53,3 +53,7 @@ InputHandler::~InputHandler() {
 	}
 		
 }
+std::string InputHandler::getLineRead() const {
+	return (m_curLineRead->str());
+}
+
