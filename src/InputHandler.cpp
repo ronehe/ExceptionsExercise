@@ -24,7 +24,7 @@ void InputHandler::removeStream() const {
 reads anouther line from the current higest stream in the stack doesnt matter if it is
 a file or any istrem inherited class.
 
-<after effects> : removes the stream if ended inserts in the new line - from getline.
+<after effects> :removes the stream if ended inserts in the new line - from getline.
 */
 void InputHandler::readNewLine() const{
 	auto temp = std::string();
