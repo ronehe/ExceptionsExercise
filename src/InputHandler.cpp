@@ -6,7 +6,6 @@ InputHandler::InputHandler(streamObj& istr) {
 	//readNewLine();
 }
 void InputHandler::addStream(streamObj& istr) {
-	istr.exceptions(std::ios::eofbit);
 	m_streams->push(&istr);
 }
 
@@ -20,10 +19,12 @@ void InputHandler::removeStream() const {
 
 void InputHandler::readNewLine() const{
 	auto temp = std::string();
-	if (!(*(m_streams->top()))) {
-		removeStream();
-	}
 	std::getline(*(m_streams->top()), temp);
+	if ((m_streams->top()->eof())) {
+		removeStream();
+		readNewLine();
+		return;
+	}
 	m_line->str(temp);
 }
 
