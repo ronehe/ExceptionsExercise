@@ -17,7 +17,7 @@
 #include <fstream>
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
-    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(istr)), m_ostr(ostr)
+    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(&istr)), m_ostr(ostr)
 {
 }
 
@@ -101,7 +101,7 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-    char ans;
+    
     try {
         unsigned int newSize;
         //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
@@ -124,14 +124,14 @@ void FunctionCalculator::resize()
         this->resize();
     }
     catch (std::ios_base::failure& e) {
-        m_ostr << "invalid input, Please enter a number again: " << std::endl;
+        m_ostr << e.what();
       //  m_istr.clear();
         this->resize();
     }
 }
 
 bool FunctionCalculator::y_n_catcher() {
-    char ans;
+    char ans=NULL;
     auto ansIsStupid = true;
     while (ansIsStupid) {
         try {
@@ -142,10 +142,15 @@ bool FunctionCalculator::y_n_catcher() {
             }
         }
         catch (std::invalid_argument& e) {
+            m_ostr << e.what();
+
             continue;
         }
-        return ans;
+        break;
+
     }
+    return ans;
+
 }
 
 
@@ -217,12 +222,9 @@ void FunctionCalculator::runAction(Action action)
     catch (std::out_of_range& e) {
         m_ostr << e.what() << std::endl;
     }
-    catch (std::ios_base::failure& e) {
-        m_istr.handleEOF();
-    }
+  
 
     catch (MaximumFunctionsException& e) {
-        char y_n;
         m_ostr << e.what() << std::endl;
         if (y_n_catcher()) {
             m_ostr << "Please enter a function to delete: ";
@@ -236,7 +238,7 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream *newF  =new std::ifstream ;//file pointer
     newF->open(fileName);
-    m_istr.addStream(*newF);
+    m_istr.addStream(newF);
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
