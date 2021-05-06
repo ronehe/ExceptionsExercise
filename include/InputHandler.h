@@ -11,7 +11,9 @@ public:
 	~InputHandler();
 	void addStream(streamObj* istr);
 	void removeStream() const;
+	bool fileIsEmpty() const;
 	void readNewLine() const;
+	bool isCin() const;
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 private:
@@ -34,5 +36,8 @@ void operator>>(const InputHandler&curHandlar, T &into ){
 		curHandlar.m_curLineRead->clear();
 		curHandlar.readNewLine();
 		*(curHandlar.m_curLineRead) >> into;
+	}
+	if (curHandlar.fileIsEmpty()) {
+		curHandlar.removeStream();
 	}
 }

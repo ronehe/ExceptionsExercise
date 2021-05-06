@@ -26,9 +26,11 @@ void FunctionCalculator::run()
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
-        m_ostr << '\n';
-        printFunctions();
-        m_ostr << "Enter command ('help' for the list of available commands): ";
+        if (m_istr.isCin()) {
+            m_ostr << '\n';
+            printFunctions();
+            m_ostr << "Enter command ('help' for the list of available commands): ";
+        }
         const auto action = readAction();
         runAction(action);
     } while (m_running);

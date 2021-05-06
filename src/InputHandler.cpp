@@ -31,13 +31,18 @@ void InputHandler::readNewLine() const{
 	//checkes if the read failed
 	if (!(std::getline(*(m_streams->top()), temp))){
 		removeStream();
-		readNewLine();
-		return;
 	}
 	m_curLineRead->str(temp);
 }
 
+bool InputHandler::isCin() const {
+	return m_streams->top() == &std::cin;
+}
 
+
+bool InputHandler::fileIsEmpty() const{
+	return m_streams->top()->eof();
+}
 
 InputHandler::~InputHandler() {
 	delete m_curLineRead;
