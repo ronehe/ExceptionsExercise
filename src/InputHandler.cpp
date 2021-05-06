@@ -10,17 +10,13 @@ void InputHandler::addStream(streamObj& istr) {
 }
 
 void InputHandler::removeStream() const {
-	if (auto p = dynamic_cast<std::ifstream*>(m_streams->top())) {
-		p->close();
-	}
 	delete m_streams->top();
 	m_streams->pop();
 }
 
 void InputHandler::readNewLine() const{
 	auto temp = std::string();
-	std::getline(*(m_streams->top()), temp);
-	if ((m_streams->top()->eof())) {
+	if (!(std::getline(*(m_streams->top()), temp))){
 		removeStream();
 		readNewLine();
 		return;
