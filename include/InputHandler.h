@@ -37,6 +37,8 @@ void operator>>(const InputHandler&curHandlar, T &into ){
 		curHandlar.readNewLine();
 		*(curHandlar.m_curLineRead) >> into;
 	}
+
+	//if file has ended, set the input stream the previous stack
 	if (curHandlar.fileIsEmpty()) {
 		curHandlar.removeStream();
 	}
