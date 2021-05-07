@@ -46,7 +46,7 @@ void operator>>(const InputHandler&curHandlar, T &into ){
 	if ((*curHandlar.m_curLineRead).fail()) {
 		//*curHandlar.removeLine();
 		//*curHandlar.m_curLineRead->clear();
-	throw std::invalid_argument::exception();
+	throw std::invalid_argument::exception("invalid type has entered");
 		}
 	
 	

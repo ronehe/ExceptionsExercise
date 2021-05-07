@@ -50,10 +50,12 @@ void FunctionCalculator::run()
 
         catch (std::invalid_argument::exception &e) {
            m_ostr<< e.what() ;
+           std::string line(m_istr.getLineRead());//incase line is needed  
            m_istr.removeLine();
+
             if (!m_istr.isCin()) {
               
-                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<m_istr.getLineRead()<<"\n";
+                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<line<<"\n";
                 if (!y_n_catcher("would you like to continue reading? y/n "))
                     m_istr.removeStream();
                 m_istr.readNewLine();
