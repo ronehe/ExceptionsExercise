@@ -1,5 +1,5 @@
-add 1 1
-add 2 2
+mul 1 1
+mul 1 1
 read Commands3.txt
-comp 3 3
-comp 3 3
+resize 150
+mul 1 1

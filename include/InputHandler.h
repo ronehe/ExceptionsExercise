@@ -17,12 +17,14 @@ public:
 	bool isCin() const;
 	void clear();
 	const std::string fileName();
-
+	bool lineIsEmpty()const;
+	//removes the currrent line read from the top stream
+	void removeLine()const;
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 	std::string getLineRead() const;
 private:
-	std::stack<std::pair <streamObj*, std::string >>* m_streams;
+	std::stack<std::pair <streamObj*, std::string  >>* m_streams;
 	std::stringstream* m_curLineRead;
 	FunctionCalculator* m_functionsCalculator;
 };
@@ -37,11 +39,19 @@ global operator >>  for handling the top of the stack which is the current strea
 in newLineRead fun <after effects>*/
 template<typename T>
 void operator>>(const InputHandler&curHandlar, T &into ){
-	*(curHandlar.m_curLineRead) >> into;
-	if (!(*curHandlar.m_curLineRead)) {
-		curHandlar.m_curLineRead->clear();
+	if(curHandlar.lineIsEmpty())
 		curHandlar.readNewLine();
-		*(curHandlar.m_curLineRead) >> into;
-	}
+	*(curHandlar.m_curLineRead) >> into;
+
+	if ((*curHandlar.m_curLineRead).fail()) {
+		//*curHandlar.removeLine();
+		//*curHandlar.m_curLineRead->clear();
+	throw std::invalid_argument::exception();
+		}
+	
+	
+		
+
 	//if file has ended, set the input stream the previous stack
 }
+

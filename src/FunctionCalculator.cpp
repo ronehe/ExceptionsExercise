@@ -46,24 +46,20 @@ void FunctionCalculator::run()
 
         catch (MaximumFunctionsException& e) {
             m_ostr << e.what() << std::endl;
-            if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
-                m_ostr << "Please enter a function to delete: ";
-                del();
-            }
         }
 
         catch (std::invalid_argument::exception &e) {
-            //first we check if it is a file
+           m_ostr<< e.what() ;
+           m_istr.removeLine();
             if (!m_istr.isCin()) {
-                std::string cur;
-                m_istr.clear();
-                m_ostr <<"error from " <<m_istr.fileName() <<": "<<m_istr.getLineRead()<<"\n";
-                if (!y_n_catcher("would you like to continue reading? y/n"))
+              
+                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<m_istr.getLineRead()<<"\n";
+                if (!y_n_catcher("would you like to continue reading? y/n "))
                     m_istr.removeStream();
                 m_istr.readNewLine();
-                //std::cin >> cur;
+               
             }
-            //m_ostr << e.what();
+            
         }
     } while (m_running);
 }
@@ -94,7 +90,7 @@ void FunctionCalculator::poly()
     }
     (m_maxFunctions > m_functions.size()) ?
         m_functions.push_back(std::make_shared<Poly>(coeffs)) :
-        throw MaximumFunctionsException();
+        throw std::invalid_argument::exception("there is no more sapce in the calculator");
 }
 
 void FunctionCalculator::log()
@@ -106,7 +102,7 @@ void FunctionCalculator::log()
     {
         (m_maxFunctions > m_functions.size()) ?
             m_functions.push_back(std::make_shared<Log>(base, m_functions[*f])) :
-            throw MaximumFunctionsException();
+            throw std::invalid_argument::exception("there is no more sapce in the calculator");
     }
 }
 
@@ -136,15 +132,22 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
+
     
-    try {
         unsigned int newSize;
         //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         m_istr >> newSize;
-        if (newSize < 2 || newSize > 100)
-            throw std::out_of_range("Invalid size: can be resized only to values between 2 and 100, please enter a number again: ");
+        while (newSize < 2 || newSize > 100) {
+            if (!m_istr.isCin())
+                throw std::invalid_argument::exception("the size is not in the limit");
+            else {
+                std::cin.clear();
+                m_ostr << "please try a valid size";
+                m_istr >> newSize;
+            }
+        }
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
-        else  
+        else
             if (newSize < m_functions.size()) {
                 if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
                     m_maxFunctions = newSize;
@@ -153,17 +156,10 @@ void FunctionCalculator::resize()
             }
             else
                 m_maxFunctions = newSize;
-        }
-    catch (std::out_of_range& e) {
-        m_ostr << e.what() << std::endl;
-        this->resize();
-    }
-    catch (std::ios_base::failure& e) {
-        m_ostr << e.what();
-      //  m_istr.clear();
-        this->resize();
-    }
+   
+
 }
+
 
 //function for handling y/n requests from user
 //it goes throgh a loop and waits until a valid answer is recieved
@@ -236,8 +232,8 @@ void FunctionCalculator::runAction(Action action)
 				break;
 
 			case Action::Invalid:
-				m_ostr << "Command not found\n";
-                throw std::invalid_argument::exception();
+
+                throw std::invalid_argument::exception("command not found");
 				break;
 
 			case Action::Eval:   eval();             break;

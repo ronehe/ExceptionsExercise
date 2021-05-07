@@ -6,7 +6,7 @@ constarctor, enters the first stream in the top of the stack
 InputHandler::InputHandler(std::pair <streamObj* , const std::string& > strP , FunctionCalculator* calc)
 	: m_functionsCalculator(calc)
 {
-	m_streams = new std::stack<std::pair <streamObj*, std::string >>;
+	m_streams = new std::stack<std::pair <streamObj*,  std::string>>;
 	//creates new because the functions in the calculator are consts, 
 		//and we tried as little as we can to change your code
 	m_curLineRead = new std::stringstream();
@@ -19,8 +19,7 @@ InputHandler::InputHandler(streamObj* istr, FunctionCalculator* calc)
 : m_functionsCalculator(calc)
 {
 	std::pair<streamObj*, const std::string&> strP(istr,"standred input");
-
-	m_streams = new std::stack<std::pair <streamObj*, std::string >>;
+	m_streams = new std::stack<std::pair <streamObj*,  std::string >>;
 	m_curLineRead = new std::stringstream();
 	addStream(strP);
 
@@ -54,6 +53,8 @@ void InputHandler::readNewLine() const{
 		removeStream();
 	}
 	m_curLineRead->str(temp);
+	m_curLineRead->clear();
+	m_curLineRead->seekg(0, std::ios::beg);
 }
 
 bool InputHandler::isCin() const {
@@ -76,6 +77,15 @@ InputHandler::~InputHandler() {
 std::string InputHandler::getLineRead() const {
 	return (m_curLineRead->str());
 }
+//returns the file name of the current stream
 const std::string InputHandler:: fileName() {
 	return m_streams->top().second;
+}
+bool InputHandler::lineIsEmpty()const {
+	return(!m_curLineRead->rdbuf()->in_avail());
+}
+//removes the currrent line read from the top steram
+void InputHandler:: removeLine() const{
+	std::stringstream().swap(*m_curLineRead);
+	
 }

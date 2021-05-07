@@ -32,7 +32,7 @@ private:
         {
             (m_functions.size() < m_maxFunctions) ?
                 (m_functions.push_back(std::make_shared<FuncType>(m_functions[*f0], m_functions[*f1]))) :
-                throw MaximumFunctionsException();
+                throw std::invalid_argument::exception("there is no more sapce in the calculator");
         }
     }
 
