@@ -8,7 +8,6 @@
 #include "Comp.h"
 #include "Log.h"
 
-
 #include <istream>
 #include <iostream>
 #include <ostream>
@@ -17,8 +16,14 @@
 #include <fstream>
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
-    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(&istr)), m_ostr(ostr)
+    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(&istr, this)), m_ostr(ostr)
 {
+}
+
+void FunctionCalculator::printFunctionList() {
+	m_ostr << '\n';
+	printFunctions();
+	m_ostr << "Enter command ('help' for the list of available commands): ";
 }
 
 void FunctionCalculator::run()
@@ -26,11 +31,8 @@ void FunctionCalculator::run()
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
-        if (m_istr.isCin()) {
-            m_ostr << '\n';
-            printFunctions();
-            m_ostr << "Enter command ('help' for the list of available commands): ";
-        }
+        if (m_istr.isCin())
+            printFunctionList();
         try {
             const auto action = readAction();
             runAction(action);
@@ -44,7 +46,7 @@ void FunctionCalculator::run()
 
         catch (MaximumFunctionsException& e) {
             m_ostr << e.what() << std::endl;
-            if (y_n_catcher()) {
+            if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
                 m_ostr << "Please enter a function to delete: ";
                 del();
             }
@@ -54,14 +56,15 @@ void FunctionCalculator::run()
             //first we check if it is a file
             if (!m_istr.isCin()) {
                 std::string cur;
+                m_istr.clear();
                 m_ostr <<"error : \n" <<m_istr.getLineRead()<<"\n";
-                m_ostr << " would you like to continue reading ? ";
-                std::cin >> cur;
+                if (!y_n_catcher("would you like to continue reading? y/n"))
+                    m_istr.removeStream();
+                m_istr.readNewLine();
+                //std::cin >> cur;
             }
-            m_ostr << e.what();
-
+            //m_ostr << e.what();
         }
-        
     } while (m_running);
 }
 
@@ -143,7 +146,7 @@ void FunctionCalculator::resize()
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else  
             if (newSize < m_functions.size()) {
-                if (y_n_catcher()) {
+                if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
                     m_maxFunctions = newSize;
                     m_functions.resize(m_maxFunctions);
                 }
@@ -162,29 +165,27 @@ void FunctionCalculator::resize()
     }
 }
 
-bool FunctionCalculator::y_n_catcher() {
-    char ans=NULL;
+//function for handling y/n requests from user
+//it goes throgh a loop and waits until a valid answer is recieved
+bool FunctionCalculator::y_n_catcher(const std::string& requestMsg) {
+    auto ans = std::string();
     auto ansIsStupid = true;
     while (ansIsStupid) {
         try {
-            m_ostr << "the operation might delete some fucntions do you want to continue ? y/n";
-            m_istr >> ans;
-            if (ans != 'y' && ans != 'n') {
+            m_ostr << requestMsg; 
+            std::getline(std::cin, ans);
+            if (ans != "y" && ans != "n") {
                 throw std::invalid_argument("the requested answer is either y or n");
             }
         }
         catch (std::invalid_argument& e) {
             m_ostr << e.what();
-
             continue;
         }
         break;
-
     }
-    return ans;
-
+    return ans == "y";
 }
-
 
 void FunctionCalculator::printFunctions() const
 {
@@ -251,14 +252,12 @@ void FunctionCalculator::runAction(Action action)
 			case Action::Resize: resize();           break;
             case Action::Read:   read();             break;
         }
-    
-   
 }
 
 void FunctionCalculator::read() {
     auto fileName=std::string();
     m_istr >> fileName;
-    std::ifstream *newF  =new std::ifstream ;//file pointer
+    std::ifstream *newF  = new std::ifstream ;//file pointer
     newF->open(fileName);
     m_istr.addStream(newF);
 }

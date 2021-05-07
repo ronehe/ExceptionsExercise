@@ -1,2 +1,5 @@
-asd
 add 1 1
+comp 2 2
+a
+log 3 1
+log 3 1

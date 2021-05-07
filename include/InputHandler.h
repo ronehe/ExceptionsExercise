@@ -3,23 +3,26 @@
 #include <sstream>
 #include <iostream>
 
+class FunctionCalculator;
 typedef std::istream streamObj;
 
 class InputHandler {
 public:
-	InputHandler(streamObj* istr);
+	InputHandler(streamObj* istr, FunctionCalculator*);
 	~InputHandler();
 	void addStream(streamObj* istr);
 	void removeStream() const;
-	bool fileIsEmpty() const;
 	void readNewLine() const;
 	bool isCin() const;
+	void clear();
+	
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 	std::string getLineRead() const;
 private:
 	std::stack<streamObj*>* m_streams;
 	std::stringstream* m_curLineRead;
+	FunctionCalculator* m_functionsCalculator;
 };
 
 /*
@@ -38,9 +41,5 @@ void operator>>(const InputHandler&curHandlar, T &into ){
 		curHandlar.readNewLine();
 		*(curHandlar.m_curLineRead) >> into;
 	}
-
 	//if file has ended, set the input stream the previous stack
-	if (curHandlar.fileIsEmpty()) {
-		curHandlar.removeStream();
-	}
 }

@@ -83,8 +83,11 @@ private:
 
 //~~~~~~~~~~~~~~functions~~~~~~~~~~~~~~~~~~~~~~~~
 
+public:
+    void printFunctionList();
+
 private:
-    bool y_n_catcher();
+    bool y_n_catcher(const std::string&);
     void read();
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~

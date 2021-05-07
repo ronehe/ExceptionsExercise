@@ -1,1 +1,5 @@
 add 1 1
+add 2 2
+read Commands3.txt
+comp 3 3
+comp 3 3
