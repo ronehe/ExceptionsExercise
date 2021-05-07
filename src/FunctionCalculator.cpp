@@ -57,7 +57,7 @@ void FunctionCalculator::run()
             if (!m_istr.isCin()) {
                 std::string cur;
                 m_istr.clear();
-                m_ostr <<"error : \n" <<m_istr.getLineRead()<<"\n";
+                m_ostr <<"error from " <<m_istr.fileName() <<": "<<m_istr.getLineRead()<<"\n";
                 if (!y_n_catcher("would you like to continue reading? y/n"))
                     m_istr.removeStream();
                 m_istr.readNewLine();
@@ -259,7 +259,8 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream *newF  = new std::ifstream ;//file pointer
     newF->open(fileName);
-    m_istr.addStream(newF);
+    std::pair<streamObj*, const std::string&> cur(newF, fileName);
+    m_istr.addStream(cur);
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()

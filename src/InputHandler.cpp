@@ -3,23 +3,38 @@
 constarctor, enters the first stream in the top of the stack
  */ 
 //"istr" : 
-InputHandler::InputHandler(streamObj* istr, FunctionCalculator* calc) 
+InputHandler::InputHandler(std::pair <streamObj* , const std::string& > strP , FunctionCalculator* calc)
 	: m_functionsCalculator(calc)
 {
-	m_streams = new std::stack<streamObj*>;
+	m_streams = new std::stack<std::pair <streamObj*, std::string >>;
 	//creates new because the functions in the calculator are consts, 
 		//and we tried as little as we can to change your code
 	m_curLineRead = new std::stringstream();
-	addStream(istr);
+	addStream(strP);
 	//readNewLine();
 }
+
+//defalut constractor for standared input
+InputHandler::InputHandler(streamObj* istr, FunctionCalculator* calc) 
+: m_functionsCalculator(calc)
+{
+	std::pair<streamObj*, const std::string&> strP(istr,"standred input");
+
+	m_streams = new std::stack<std::pair <streamObj*, std::string >>;
+	m_curLineRead = new std::stringstream();
+	addStream(strP);
+
+}
+
+
+
 //inputs new stream in the stack
-void InputHandler::addStream(streamObj* istr) {
-	m_streams->push(istr);
+void InputHandler::addStream(std::pair <streamObj*, const std::string & > strP) {
+	m_streams->push(strP);
 }
 //removes the recent stream from the stack
 void InputHandler::removeStream() const {
-	delete m_streams->top();
+	delete m_streams->top().first;//deleting the stream
 	m_streams->pop();
 	
 	//after removing stream, print function list if reached std::cin
@@ -35,14 +50,14 @@ a file or any istrem inherited class.
 void InputHandler::readNewLine() const{
 	auto temp = std::string();
 	//as long as it is possible to get lines
-	while (!std::getline(*(m_streams->top()), temp)) {
+	while (!std::getline(*(m_streams->top().first), temp)) {
 		removeStream();
 	}
 	m_curLineRead->str(temp);
 }
 
 bool InputHandler::isCin() const {
-	return m_streams->top() == &std::cin;
+	return m_streams->top().first == &std::cin;
 }
 
 void InputHandler::clear() {
@@ -54,11 +69,13 @@ InputHandler::~InputHandler() {
 	while (m_streams->size() )
 	{
 		if(!isCin())
-			delete(m_streams->top());
+			delete(m_streams->top().first);
 		m_streams->pop();
 	}
 }
 std::string InputHandler::getLineRead() const {
 	return (m_curLineRead->str());
 }
-
+const std::string InputHandler:: fileName() {
+	return m_streams->top().second;
+}

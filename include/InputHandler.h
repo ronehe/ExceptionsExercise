@@ -8,19 +8,21 @@ typedef std::istream streamObj;
 
 class InputHandler {
 public:
+	InputHandler(std::pair <streamObj*, const std::string&  >strOb, FunctionCalculator*);
 	InputHandler(streamObj* istr, FunctionCalculator*);
 	~InputHandler();
-	void addStream(streamObj* istr);
+	void addStream(std::pair <streamObj*,const  std::string & > strP);
 	void removeStream() const;
 	void readNewLine() const;
 	bool isCin() const;
 	void clear();
-	
+	const std::string fileName();
+
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 	std::string getLineRead() const;
 private:
-	std::stack<streamObj*>* m_streams;
+	std::stack<std::pair <streamObj*, std::string >>* m_streams;
 	std::stringstream* m_curLineRead;
 	FunctionCalculator* m_functionsCalculator;
 };
