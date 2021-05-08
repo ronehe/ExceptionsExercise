@@ -64,7 +64,8 @@ void FunctionCalculator::run()
 
 void FunctionCalculator::eval()
 {
-
+    if (!checkParam(3, m_istr.getLineRead()))
+        throw std::logic_error::exception("evaluate  requires 2 parmeters functions and the X");
     if (auto i = readFunctionIndex(); i)
     {
         
@@ -102,10 +103,10 @@ void FunctionCalculator::poly()
 void FunctionCalculator::log()
 {
     if (!checkParam(3, m_istr.getLineRead()))
-        throw std::logic_error::exception("number of arguments doesnt equal to the excpected ");
-    auto base = 0;
+        throw std::logic_error::exception("log requires 2 parmeters : base, exponent");
+    auto base = 0.;
     m_istr >> base;
-    if (base <=1)throw std::invalid_argument::exception("base of log suppose to be higher then one");
+    if (base ==1 ||base <=0)throw std::logic_error::exception("base of log suppose to be bigger than zero and diffrent then one");
     if (auto f = readFunctionIndex(); f)
     {
         (m_maxFunctions > m_functions.size()) ?
@@ -116,6 +117,8 @@ void FunctionCalculator::log()
 
 void FunctionCalculator::del()
 {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("del(ete) requires 1 parmeter : the functions number");
     if (auto i = readFunctionIndex(); i)
     {
         m_functions.erase(m_functions.begin() + *i);
@@ -124,6 +127,8 @@ void FunctionCalculator::del()
 
 void FunctionCalculator::help()
 {
+    if (!checkParam(1, m_istr.getLineRead()))
+        throw std::logic_error::exception("help requires no parmeters");
     m_ostr << "The available commands are:\n";
     for (const auto& action : m_actions)
     {
@@ -134,12 +139,16 @@ void FunctionCalculator::help()
 
 void FunctionCalculator::exit()
 {
+    if (!checkParam(1, m_istr.getLineRead()))
+        throw std::logic_error::exception("exit requires no parmeters");
     m_ostr << "Goodbye!\n";
     m_running = false;
 }
 
 void FunctionCalculator::resize()
 {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("resize requires 1 parmeter: new size");
         unsigned int newSize;
         m_istr >> newSize;
         while (newSize < 2 || newSize > 100) {
@@ -259,6 +268,8 @@ void FunctionCalculator::runAction(Action action)
 }
 
 void FunctionCalculator::read() {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("read requires 1 parmeter");
     auto fileName=std::string();
     m_istr >> fileName;
     std::ifstream *newF  = new std::ifstream ;//file pointer
