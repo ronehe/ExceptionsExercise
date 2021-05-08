@@ -24,6 +24,9 @@ private:
     void help();
     void exit();
     void resize();
+    
+    bool checkParam( const unsigned int & argu, const std::string& lineOfData);
+
 
     template <typename FuncType>
     void binaryFunc()

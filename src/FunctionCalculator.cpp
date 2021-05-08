@@ -64,11 +64,15 @@ void FunctionCalculator::run()
 
 void FunctionCalculator::eval()
 {
+
     if (auto i = readFunctionIndex(); i)
     {
+        
+        
         auto x = 0.;
         m_istr >> x;
         auto sstr = std::ostringstream();
+       
         sstr << std::setprecision(2) << std::fixed << x;
         m_ostr << m_functions[*i]->to_string(sstr.str())
             << " = "
@@ -81,6 +85,10 @@ void FunctionCalculator::poly()
 {
     auto n = 0;
     m_istr >> n;
+    //sends the amount of line arguments which are supposed to be
+    if (!checkParam(n + 2, m_istr.getLineRead()))
+        throw std::logic_error::exception(("reqired "+std::to_string(n)+" coefficents").data());
+
     auto coeffs = std::vector<double>(n);
     for (auto& coeff : coeffs)
     {
@@ -93,6 +101,8 @@ void FunctionCalculator::poly()
 
 void FunctionCalculator::log()
 {
+    if (!checkParam(3, m_istr.getLineRead()))
+        throw std::logic_error::exception("number of arguments doesnt equal to the excpected ");
     auto base = 0;
     m_istr >> base;
     if (base <=1)throw std::invalid_argument::exception("base of log suppose to be higher then one");
@@ -130,10 +140,7 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-
-    
         unsigned int newSize;
-        //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         m_istr >> newSize;
         while (newSize < 2 || newSize > 100) {
             if (!m_istr.isCin())
@@ -146,7 +153,7 @@ void FunctionCalculator::resize()
         }
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else
-            if (newSize < m_functions.size()) {
+        if (newSize < m_functions.size()) {
                 if (!m_istr.isCin())
                     throw std::invalid_argument::exception("operation failed, the size might delete functions");
                 else
@@ -314,12 +321,12 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
         },
         {
             "resize",
-            " -resize the size of the list",
+            " num - resize the size of the list to max #num",
             Action::Resize
         },
         {
             "read",
-            " -read from file",
+            " fileName - read from file #fileName",
             Action::Read
         }
     };
@@ -332,4 +339,22 @@ FunctionCalculator::FunctionList FunctionCalculator::createFunctions()
         std::make_shared<Sin>(),
         std::make_shared<Ln>()
     };
+}
+//creating a defalut check for amount of arguments 
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="numOfArguments"> num of arguments for the requested function +the name of the function{ num of arg + 1} </param>
+/// <param name="lineOfData">the line for which the function requested</param>
+bool FunctionCalculator::checkParam(const unsigned int & numOfArguments,const std::string& lineOfData) {
+    std::stringstream cur(lineOfData);
+    std::string temp;
+    unsigned int counter=0;
+    while (cur >> temp) {
+        counter++;
+    }
+    return(counter == numOfArguments);
+
 }
