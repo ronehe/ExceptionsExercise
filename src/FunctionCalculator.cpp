@@ -274,6 +274,8 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream *newF  = new std::ifstream ;//file pointer
     newF->open(fileName);
+    if (!*newF)
+        throw std::invalid_argument::exception(("file : " + fileName + " doesn't exists,").data());
     std::pair<streamObj*, const std::string&> cur(newF, fileName);
     m_istr.addStream(cur);
 }
