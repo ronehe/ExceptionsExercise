@@ -18,7 +18,22 @@
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(&istr, this)), m_ostr(ostr)
 {
+    
+        unsigned int firstSize;
+        m_ostr << "please enter the max size functions between [2,100]  : ";
+        m_istr >> firstSize;
+        while (firstSize < 2 || firstSize > 100) {
+
+            std::cin.clear();
+            m_ostr << "please try a valid size (bigger  1 lower than 101)";
+            m_istr >> firstSize;
+        }
+        m_maxFunctions = firstSize;
+    
+  
 }
+
+
 
 void FunctionCalculator::printFunctionList() {
 	m_ostr << '\n';
@@ -28,6 +43,7 @@ void FunctionCalculator::printFunctionList() {
 
 void FunctionCalculator::run()
 {
+    
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
