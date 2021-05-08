@@ -1,32 +1,33 @@
+#pragma once
 #include<fstream>
 #include<stack>
 #include <sstream>
 #include <iostream>
 
+class BaseStreamHandler;
 class FunctionCalculator;
 typedef std::istream streamObj;
 
 class InputHandler {
 public:
-	InputHandler(std::pair <streamObj*, const std::string&  >strOb, FunctionCalculator*);
-	InputHandler(streamObj* istr, FunctionCalculator*);
+	InputHandler(BaseStreamHandler*);
 	~InputHandler();
-	void addStream(std::pair <streamObj*,const  std::string & > strP);
+	void addStream(BaseStreamHandler*);
 	void removeStream() const;
 	void readNewLine() const;
-	bool isCin() const;
+	void handleInvalidArgument(std::ostream&);
+	//bool isCin() const;
 	void clear();
-	const std::string fileName();
+	//const std::string fileName();
 	bool lineIsEmpty()const;
 	//removes the currrent line read from the top stream
-	void removeLine()const;
+	//void removeLine()const;
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 	std::string getLineRead() const;
 private:
-	std::stack<std::pair <streamObj*, std::string  >>* m_streams;
+	std::stack<BaseStreamHandler*>* m_streams;
 	std::stringstream* m_curLineRead;
-	FunctionCalculator* m_functionsCalculator;
 };
 
 /*
@@ -44,14 +45,8 @@ void operator>>(const InputHandler&curHandlar, T &into ){
 	*(curHandlar.m_curLineRead) >> into;
 
 	if ((*curHandlar.m_curLineRead).fail()) {
-		//*curHandlar.removeLine();
-		//*curHandlar.m_curLineRead->clear();
 	throw std::invalid_argument::exception("invalid type has entered");
 		}
-	
-	
-		
-
 	//if file has ended, set the input stream the previous stack
 }
 

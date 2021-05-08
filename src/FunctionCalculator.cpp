@@ -1,5 +1,4 @@
 #include "FunctionCalculator.h"
-
 #include "Sin.h"
 #include "Ln.h"
 #include "Poly.h"
@@ -16,7 +15,7 @@
 #include <fstream>
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
-    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(&istr, this)), m_ostr(ostr)
+    : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(new CinHandler(&istr, this))), m_ostr(ostr)
 {
 }
 
@@ -31,8 +30,6 @@ void FunctionCalculator::run()
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
-        if (m_istr.isCin())
-            printFunctionList();
         try {
             const auto action = readAction();
             runAction(action);
@@ -49,19 +46,8 @@ void FunctionCalculator::run()
         }
 
         catch (std::invalid_argument::exception &e) {
-           m_ostr<< e.what() ;
-           std::string line(m_istr.getLineRead());//incase line is needed  
-           m_istr.removeLine();
-
-            if (!m_istr.isCin()) {
-              
-                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<line<<"\n";
-                if (!y_n_catcher("would you like to continue reading? y/n "))
-                    m_istr.removeStream();
-                m_istr.readNewLine();
-               
-            }
-            
+           m_ostr<< e.what();
+           m_istr.handleInvalidArgument(m_ostr);
         }
     } while (m_running);
 }
@@ -86,8 +72,7 @@ void FunctionCalculator::poly()
     auto n = 0;
     m_istr >> n;
     auto coeffs = std::vector<double>(n);
-    for (auto& coeff : coeffs)
-    {
+    for (auto& coeff : coeffs){
         m_istr >> coeff;
     }
     (m_maxFunctions > m_functions.size()) ?
@@ -134,12 +119,11 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-
-    
         unsigned int newSize;
         //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         m_istr >> newSize;
         while (newSize < 2 || newSize > 100) {
+            m_istr.handleInvalidArgument(m_ostr, newSize)
             if (!m_istr.isCin())
                 throw std::invalid_argument::exception("the size is not in the limit");
             else {
@@ -158,8 +142,6 @@ void FunctionCalculator::resize()
             }
             else
                 m_maxFunctions = newSize;
-   
-
 }
 
 
@@ -247,7 +229,7 @@ void FunctionCalculator::runAction(Action action)
 			case Action::Del:    del();              break;
 			case Action::Help:   help();             break;
 			case Action::Exit:   exit();             break;
-			case Action::Resize: resize();           break;
+			//case Action::Resize: resize();           break;
             case Action::Read:   read();             break;
         }
 }
@@ -257,8 +239,9 @@ void FunctionCalculator::read() {
     m_istr >> fileName;
     std::ifstream *newF  = new std::ifstream ;//file pointer
     newF->open(fileName);
-    std::pair<streamObj*, const std::string&> cur(newF, fileName);
-    m_istr.addStream(cur);
+    
+    auto file = new FileHandler(newF, this, fileName);
+    m_istr.addStream(file);
 }
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
@@ -313,11 +296,11 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
             " - exit the program",
             Action::Exit
         },
-        {
-            "resize",
-            " -resize the size of the list",
-            Action::Resize
-        },
+        //{
+            //"resize",
+            //" -resize the size of the list",
+            //Action::Resize
+        //},
         {
             "read",
             " -read from file",

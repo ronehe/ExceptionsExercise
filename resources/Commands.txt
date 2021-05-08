@@ -1,6 +1,4 @@
 add 1 0
-add 1 0
+read Commands2.txt
 resize s
-add 1 0
-add 1 0
 add 1 0

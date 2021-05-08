@@ -1,10 +1,13 @@
 #pragma once
-#include "InputHandler.h"
 #include <vector>
 #include <memory>
 #include <string>
 #include <iosfwd>
 #include <optional>
+
+#include "InputHandler.h"
+#include "CinHandler.h"
+#include "FileHandler.h"
 
 #include <MaximumFunctionsException.h>
 
@@ -23,7 +26,7 @@ private:
     void del();
     void help();
     void exit();
-    void resize();
+    //void resize();
 
     template <typename FuncType>
     void binaryFunc()
@@ -50,7 +53,7 @@ private:
         Del,
         Help,
         Exit,
-        Resize,
+        //Resize,
         Read,
     };
 

@@ -1,25 +1,9 @@
 #pragma once
 #include <exception>
 #include <functional>
+#include <iostream>
 
-template<typename T>
-class Validator {
+class YesNoValidator {
 public:
-	T operator()(std::function<void()>);
+	static bool validate();
 };
-
-template <typename T>
-T Validator<T>::operator()(std::function<void()> func) {
-    T ans;
-    auto ansIsStupid = true;
-    while (ansIsStupid) {
-        try {
-            func();
-        }
-        catch (std::exception& e) {
-            m_istr.clear();
-            continue;
-        }
-        return ans;
-    }
-}
