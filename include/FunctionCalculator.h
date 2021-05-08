@@ -26,7 +26,7 @@ private:
     void del();
     void help();
     void exit();
-    //void resize();
+    void resize();
 
     template <typename FuncType>
     void binaryFunc()
@@ -53,7 +53,7 @@ private:
         Del,
         Help,
         Exit,
-        //Resize,
+        Resize,
         Read,
     };
 
@@ -88,10 +88,13 @@ private:
 
 public:
     void printFunctionList();
+    bool getYesNo(const std::string&);
+    unsigned int getValidListLength();
 
 private:
-    bool y_n_catcher(const std::string&);
     void read();
+    const unsigned int m_minListSize = 2;
+    const unsigned int m_maxListSize = 100;
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
 private:

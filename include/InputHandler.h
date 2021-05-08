@@ -16,12 +16,11 @@ public:
 	void removeStream() const;
 	void readNewLine() const;
 	void handleInvalidArgument(std::ostream&);
-	//bool isCin() const;
+	void handleOutOfRange(unsigned int& num);
+	bool handleOverloadFunctionList();
 	void clear();
-	//const std::string fileName();
 	bool lineIsEmpty()const;
-	//removes the currrent line read from the top stream
-	//void removeLine()const;
+
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
 	std::string getLineRead() const;

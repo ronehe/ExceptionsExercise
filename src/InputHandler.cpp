@@ -15,11 +15,18 @@ InputHandler::InputHandler(BaseStreamHandler* stream)
 	//readNewLine();
 }
 
+void InputHandler::handleOutOfRange(unsigned int& size) {
+	size = m_streams->top()->getValidListLength();
+}
+
+bool InputHandler::handleOverloadFunctionList() {
+	return m_streams->top()->handleOverloadFunctionList();
+}
+
 void InputHandler::handleInvalidArgument(std::ostream& ostr) {
 	if (m_streams->top()->endReadingFromStream(ostr, m_curLineRead->str())) {
 		removeStream();
 	}
-
 	readNewLine();
 }
 

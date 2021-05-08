@@ -9,3 +9,4 @@ bool BaseStreamHandler::getline(std::string& str) {
 	if (std::getline(*m_stream, str)) return true;
 	return false;
 }
+

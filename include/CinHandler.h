@@ -8,4 +8,6 @@ public:
 	CinHandler(std::istream*, FunctionCalculator*);
 	bool getline(std::string&) override;
 	bool endReadingFromStream(std::ostream&, const std::string&) const override;
+	unsigned int getValidListLength() const override;
+	bool handleOverloadFunctionList() const override;
 };

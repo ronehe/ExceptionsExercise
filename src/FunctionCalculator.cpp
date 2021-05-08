@@ -119,52 +119,48 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-        unsigned int newSize;
-        //m_istr.exceptions(std::ios_base::badbit | std::ios_base::failbit);
-        m_istr >> newSize;
-        while (newSize < 2 || newSize > 100) {
-            m_istr.handleInvalidArgument(m_ostr, newSize)
-            if (!m_istr.isCin())
-                throw std::invalid_argument::exception("the size is not in the limit");
-            else {
-                std::cin.clear();
-                m_ostr << "please try a valid size";
-                m_istr >> newSize;
-            }
-        }
-        if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
-        else
-            if (newSize < m_functions.size()) {
-                if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
-                    m_maxFunctions = newSize;
-                    m_functions.resize(m_maxFunctions);
-                }
-            }
-            else
-                m_maxFunctions = newSize;
-}
+	unsigned int newSize;
+	m_istr >> newSize;
+	if (newSize < m_minListSize || newSize > m_maxListSize)
+		m_istr.handleOutOfRange(newSize);
 
+	if (newSize > m_maxFunctions)
+        m_maxFunctions = newSize;
+	else if (newSize < m_functions.size()) {
+        if(m_istr.handleOverloadFunctionList()){
+			m_maxFunctions = newSize;
+			m_functions.resize(m_maxFunctions);
+		}
+	}
+	else
+		m_maxFunctions = newSize;
+}
 
 //function for handling y/n requests from user
 //it goes throgh a loop and waits until a valid answer is recieved
-bool FunctionCalculator::y_n_catcher(const std::string& requestMsg) {
+bool FunctionCalculator::getYesNo(const std::string& requestMsg) {
     auto ans = std::string();
     auto ansIsStupid = true;
     while (ansIsStupid) {
-        try {
-            m_ostr << requestMsg; 
-            std::getline(std::cin, ans);
-            if (ans != "y" && ans != "n") {
-                throw std::invalid_argument("the requested answer is either y or n");
-            }
-        }
-        catch (std::invalid_argument& e) {
-            m_ostr << e.what();
+        std::cout << requestMsg;
+        std::getline(std::cin, ans);
+        if (ans != "y" && ans != "n") {
+            std::cout << "Please enter y/n\n";
             continue;
         }
-        break;
+        else return ans == "y";
     }
-    return ans == "y";
+}
+
+unsigned int FunctionCalculator::getValidListLength() {
+    unsigned int num;
+    auto invalidAns = true;
+    do {
+        m_istr.clear();
+        m_ostr << "Enter a number between " << m_minListSize << "and " << m_maxListSize << " : ";
+        m_istr >> num;
+    } while (num < m_minListSize && num > m_maxListSize);
+    return num;
 }
 
 void FunctionCalculator::printFunctions() const
@@ -229,7 +225,7 @@ void FunctionCalculator::runAction(Action action)
 			case Action::Del:    del();              break;
 			case Action::Help:   help();             break;
 			case Action::Exit:   exit();             break;
-			//case Action::Resize: resize();           break;
+			case Action::Resize: resize();           break;
             case Action::Read:   read();             break;
         }
 }
@@ -296,11 +292,11 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
             " - exit the program",
             Action::Exit
         },
-        //{
-            //"resize",
-            //" -resize the size of the list",
-            //Action::Resize
-        //},
+        {
+            "resize",
+            " -resize the size of the list",
+            Action::Resize
+        },
         {
             "read",
             " -read from file",
