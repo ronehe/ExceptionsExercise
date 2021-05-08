@@ -50,17 +50,13 @@ void FunctionCalculator::run()
 
         catch (std::invalid_argument::exception &e) {
            m_ostr<< e.what() ;
-           std::string line(m_istr.getLineRead());//incase line is needed  
-           m_istr.removeLine();
-
             if (!m_istr.isCin()) {
               
-                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<line<<"\n";
+                m_ostr <<" in file - " <<m_istr.fileName() <<": "<<m_istr.getLineRead()<<"\n";
                 if (!y_n_catcher("would you like to continue reading? y/n "))
                     m_istr.removeStream();
-                m_istr.readNewLine();
-               
             }
+            m_istr.removeLine();
             
         }
     } while (m_running);
@@ -151,6 +147,9 @@ void FunctionCalculator::resize()
         if (newSize > m_maxFunctions)  m_maxFunctions = newSize;
         else
             if (newSize < m_functions.size()) {
+                if (!m_istr.isCin())
+                    throw std::invalid_argument::exception("operation failed, the size might delete functions");
+                else
                 if (y_n_catcher("The operation might delete some functions, would you like to continue? y/n")) {
                     m_maxFunctions = newSize;
                     m_functions.resize(m_maxFunctions);

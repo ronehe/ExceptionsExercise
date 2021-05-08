@@ -52,9 +52,10 @@ void InputHandler::readNewLine() const{
 	while (!std::getline(*(m_streams->top().first), temp)) {
 		removeStream();
 	}
+	removeLine();
 	m_curLineRead->str(temp);
-	m_curLineRead->clear();
-	m_curLineRead->seekg(0, std::ios::beg);
+	
+	
 }
 
 bool InputHandler::isCin() const {
@@ -86,6 +87,9 @@ bool InputHandler::lineIsEmpty()const {
 }
 //removes the currrent line read from the top steram
 void InputHandler:: removeLine() const{
-	std::stringstream().swap(*m_curLineRead);
 	
+		std::stringstream().swap(*m_curLineRead);
+		m_curLineRead->seekg(0, std::ios::beg);
+	
+
 }
