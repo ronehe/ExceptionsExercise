@@ -10,6 +10,7 @@ private:
 	std::istream* m_stream; //cin or files
 protected:
 	FunctionCalculator* m_functionCalculator; //for accessing necessary public functions
+	bool m_isRunning = false;
 public:
 	BaseStreamHandler(std::istream*, FunctionCalculator*);
 	virtual bool getline(std::string&);
@@ -18,4 +19,5 @@ public:
 	virtual bool endReadingFromStream(std::ostream&, const std::string&) const = 0;
 	virtual unsigned int getValidListLength() const = 0;
 	virtual bool handleOverloadFunctionList() const = 0;
+	void startRunning();
 };
