@@ -357,7 +357,7 @@ FunctionCalculator::FunctionList FunctionCalculator::createFunctions()
 
 
 /// <summary>
-/// 
+/// counts the amount of parameters in the line read from user and compares to the right amount
 /// </summary>
 /// <param name="numOfArguments"> num of arguments for the requested function +the name of the function{ num of arg + 1} </param>
 /// <param name="lineOfData">the line for which the function requested</param>
