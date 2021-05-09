@@ -4,12 +4,26 @@
 #include <string>
 #include <iosfwd>
 #include <optional>
+#include <istream>
+#include <iostream>
+#include <ostream>
+#include <iomanip>
+#include <sstream>
+#include <fstream>
+
+#include "Sin.h"
+#include "Ln.h"
+#include "Poly.h"
+#include "Mul.h"
+#include "Add.h"
+#include "Comp.h"
+#include "Log.h"
 
 #include "InputHandler.h"
 #include "CinHandler.h"
 #include "FileHandler.h"
+#include "macros.h"
 
-#include <MaximumFunctionsException.h>
 
 class Function;
 

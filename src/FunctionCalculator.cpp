@@ -1,18 +1,5 @@
 #include "FunctionCalculator.h"
-#include "Sin.h"
-#include "Ln.h"
-#include "Poly.h"
-#include "Mul.h"
-#include "Add.h"
-#include "Comp.h"
-#include "Log.h"
-#include "macros.h"
-#include <istream>
-#include <iostream>
-#include <ostream>
-#include <iomanip>
-#include <sstream>
-#include <fstream>
+
 
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(new CinHandler(&istr, this))), m_ostr(ostr)
@@ -58,9 +45,7 @@ void FunctionCalculator::run()
         }
 
 
-        catch (MaximumFunctionsException& e) {
-            m_ostr << e.what() << std::endl;
-        }
+      
 
         catch (std::invalid_argument::exception &e) {
            m_ostr<< e.what();
