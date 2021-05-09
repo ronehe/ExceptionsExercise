@@ -23,41 +23,33 @@ Functions Calculator is a calculator capable of performing basic operations on a
 
 **"del(ete) num"**- Deletes function #num from function list
 
+**"read fileName"**- reads from a file
+
+**"resize size "**- sets the max capacity of functions in the calculator 
+
 **"help"** - Prints this help screen
 **"exit"**- Exits the program
 
 **NOTE**: every number in this function is rounded to 2 points after the decimal dot, beside powers in polynomials
 
 # Details and design
-The functions are displayed on the terminal in the form of a list, onto which the user can add the wanted function, using commands that operate on a function or a pair of functions.
+The functions are displayed on the terminal in the form of a list, 
+onto which the user can add the wanted function, 
+using commands that operate on a function or a pair of functions.
+
+the calculator excepets any kind of stream, *the read functions can be read from a file again *
 
 ## Classes
-**Function**: ADT base class from which all functions in the calculator inherit. it holds the equation for the function, and the calculation/print methods.
-
-**Log**: The logarithm function. default constructor initializes to natural logarithm, additional constructor recieves a positive value and initalizes to logarithm in the given base.
-
-**Sin**: The sin function
-
-**Polynomial**: The polynomial function. has a constructor that gets vector of coefficients.
-
-**ComplexFun**: ADT base class from which all user-built functions will inherit. 
-
-**SumFunction**: for all functions that are generated using the addition operator
-
-**MulFunction**: for all functions that are generated using the multiplication operator
-
-**ComposeFunction**: for all functions that are generated using the composition operator
-
-**List**: data structure of calculator.
-
-## UML
-![img](https://i.imgur.com/7svMebS.png)
 
 # Data Structures
-We built a class "Function_list" as data structure. it contains a vector for shared pointers of type Function (ADT).
-It can add new functions to the vector, remove functions, and the entire program runs based on this class.
+we desided to change the code as little as posible while adding the requetsed exceptions, so instead of recursivly 
+readding from a file (you can call the read fucntion from a file as well), we decided to create an object of InputHandler 
+which has a stack data structure - capble of collaborating between cin streams, and any other *istream* inherited classes
+(like fstream for example).
 
 # Noteworthy algorithms
-None
+using the read function from a file .
+polymorphic functions used  whether its a cin handler or filehandler for a cleaner code .
+
 # Known Bugs
 None

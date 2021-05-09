@@ -9,7 +9,6 @@
                                   "Add.cpp"
                                   "Comp.cpp"
                                   "Log.cpp"
-                                  "YesNoValidator.cpp"
                                   "BaseStreamHandler.cpp"
                                   "FileHandler.cpp"
                                   "CinHandler.cpp")

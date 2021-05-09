@@ -1,1 +1,1 @@
-const unsigned int evalArguments = 3;
+const unsigned int EVAL_ARGS = 3;

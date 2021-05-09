@@ -6,7 +6,7 @@
 #include "Add.h"
 #include "Comp.h"
 #include "Log.h"
-
+#include "macros.h"
 #include <istream>
 #include <iostream>
 #include <ostream>
@@ -71,7 +71,7 @@ void FunctionCalculator::run()
 
 void FunctionCalculator::eval()
 {
-    if (!checkParam(3, m_istr.getLineRead()))
+    if (!checkParam(EVAL_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("evaluate  requires 2 parmeters functions and the X");
     if (auto i = readFunctionIndex(); i)
     {
