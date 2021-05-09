@@ -64,7 +64,6 @@ void FunctionCalculator::run()
         catch (std::invalid_argument::exception &e) {
            m_ostr<< e.what();
            m_istr.handleInvalidArgument(m_ostr);
-            
         }
     } while (m_running);
 }
@@ -277,7 +276,6 @@ void FunctionCalculator::read() {
     newF->open(fileName);
     if (!*newF)
         throw std::invalid_argument::exception(("file : " + fileName + " doesn't exists,").data());
-    
     auto file = new FileHandler(newF, this, fileName);
     m_istr.addStream(file);
 }
