@@ -87,4 +87,6 @@ using the read function from a file .
 polymorphic functions used  whether its a cin handler or filehandler for a cleaner code .
 
 # Known Bugs
-None
+we are not  sure if it is considered a bug - we didnt understand if the resize function called by a file should go
+back and ask the user for a verafication for deleting some functions,  or just go back to user and ask whether he wants to 
+continue reading the file, so as we did in any exception we wenty back and asked the user if he wants to continue reading.

@@ -71,10 +71,12 @@ void FunctionCalculator::poly()
 {
     auto n = 0;
     m_istr >> n;
+    if(n<0)
+        throw std::logic_error::exception((std::to_string(n) + " isn't a positive argument for number of elements").data());
     const unsigned int POLY_ARGS=n+2;
     //sends the amount of line arguments which are supposed to be
     if (!checkParam(POLY_ARGS, m_istr.getLineRead()))
-        throw std::logic_error::exception(("reqired "+std::to_string(n)+" coefficents").data());
+        throw std::logic_error::exception(("required "+std::to_string(n)+" coefficents").data());
 
     auto coeffs = std::vector<double>(n);
     for (auto& coeff : coeffs){
