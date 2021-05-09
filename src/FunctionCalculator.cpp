@@ -142,7 +142,7 @@ bool FunctionCalculator::getYesNo(const std::string& requestMsg) {
     auto ans = std::string();
     auto ansIsStupid = true;
     while (ansIsStupid) {
-        std::cout << requestMsg;
+        m_ostr << requestMsg;
         std::getline(std::cin, ans);
         if (ans != "y" && ans != "n") {
             std::cout << "Please enter y/n\n";
@@ -153,13 +153,15 @@ bool FunctionCalculator::getYesNo(const std::string& requestMsg) {
 }
 
 unsigned int FunctionCalculator::getValidListLength() {
-    unsigned int num;
+    unsigned int num = 0;
     auto invalidAns = true;
     do {
-        m_istr.clear();
-        m_ostr << "Enter a number between " << m_minListSize << "and " << m_maxListSize << " : ";
-        m_istr >> num;
-    } while (num < m_minListSize && num > m_maxListSize);
+        std::cout << "Enter a number between " << m_minListSize << "and " << m_maxListSize << " : ";
+        std::cin.clear();
+        std::cin.ignore();
+        if (!(std::cin >> num)) continue;
+    } while (num < m_minListSize || num > m_maxListSize);
+    std::cin.ignore();
     return num;
 }
 
