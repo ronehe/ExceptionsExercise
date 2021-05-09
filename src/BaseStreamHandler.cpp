@@ -13,3 +13,7 @@ bool BaseStreamHandler::getline(std::string& str) {
 void BaseStreamHandler::startRunning() {
 	m_isRunning = true;
 }
+
+BaseStreamHandler::~BaseStreamHandler() {
+
+}
