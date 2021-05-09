@@ -149,6 +149,8 @@ void FunctionCalculator::resize()
 	}
 	else
 		m_maxFunctions = newSize;
+
+    m_ostr << "Now the length of list is: " << m_maxFunctions;
 }
 
 void FunctionCalculator::read() {
@@ -167,32 +169,39 @@ void FunctionCalculator::read() {
 //function for handling y/n requests from user
 //it goes through a loop and waits until a valid answer is recieved
 bool FunctionCalculator::getYesNo(const std::string& requestMsg) {
+    m_istr.addStream(new CinHandler(&std::cin, this));
     auto ans = std::string();
     auto invalidInput= true;
     while (invalidInput) {
         m_ostr << requestMsg;
-        std::getline(std::cin, ans);
+        m_istr.readNewLine();
+        ans = m_istr.getLineRead();
         if (ans != "y" && ans != "n") {
             m_ostr << "Please enter y/n\n";
             continue;
         }
         invalidInput = false;
     }
+    m_istr.removeStream();
     return ans == "y";
 }
 
 //function for getting a valid value of size of the list
 //it iterates in a loop until a valid value is entered
 unsigned int FunctionCalculator::getValidListLength() {
+    m_istr.addStream(new CinHandler(&std::cin, this));
     unsigned int num = 0;
-    auto invalidAns = true;
-    do {
-        std::cout << "Enter a number between " << MIN_LIST_SIZE << "and " << MAX_LIST_SIZE << " : ";
-        std::cin.clear();
-        std::cin.ignore();
-        if (!(std::cin >> num)) continue;
-    } while (num < MIN_LIST_SIZE || num > MAX_LIST_SIZE);
-    std::cin.ignore();
+    while(true){
+        m_ostr << "Enter a number between " << MIN_LIST_SIZE << "and " << MAX_LIST_SIZE << " : ";
+        try {
+            m_istr >> num;
+            m_istr.clear();
+            m_istr.ignoreLine();
+        }
+        catch (std::exception& e) { continue; }
+        break;
+    }
+    m_istr.removeStream();
     return num;
 }
 

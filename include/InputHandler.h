@@ -19,6 +19,7 @@ public:
 	void handleOutOfRange(unsigned int& num);
 	bool handleOverloadFunctionList();
 	void clear();
+	void ignoreLine()const;
 	bool lineIsEmpty()const;
 	void startRunning();
 

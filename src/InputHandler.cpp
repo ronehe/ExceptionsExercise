@@ -41,6 +41,10 @@ void InputHandler::removeStream() const {
 	
 }
 
+void InputHandler::ignoreLine() const {
+	m_curLineRead->ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
+
 /* 
 reads another line from the current first stream in the stack, doesnt matter if it is
 a file or any istrem inherited class.
