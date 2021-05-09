@@ -6,7 +6,6 @@ https://github.com/ronehe/ExceptionsExercise
 
 Functions Calculator is a calculator capable of performing basic operations on a given set of functions, such as generating new functions out of already generated once, and evaluation at a real point in the domain of a certain function.
 
-
 **Following is the list of the calculator's available commands:**
 
 **"eval(uate) num x "**- Evaluates function #num on x

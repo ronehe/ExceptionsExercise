@@ -4,33 +4,28 @@
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(new CinHandler(&istr, this))), m_ostr(ostr)
 {
-    
-        unsigned int firstSize;
-        m_ostr << "please enter the max size functions between [2,100]  : ";
+    unsigned int firstSize;
+    m_ostr << "please enter the max size functions between [2,100]  : ";
+    m_istr >> firstSize;
+    while (firstSize < 2 || firstSize > 100) {
+        std::cin.clear();
+        m_ostr << "please try a valid size (bigger  1 lower than 101)";
         m_istr >> firstSize;
-        while (firstSize < 2 || firstSize > 100) {
-
-            std::cin.clear();
-            m_ostr << "please try a valid size (bigger  1 lower than 101)";
-            m_istr >> firstSize;
-        }
-        m_maxFunctions = firstSize;
-        m_istr.startRunning();
-    
-  
+    }
+    m_maxFunctions = firstSize;
+    m_istr.startRunning();
 }
 
 
-
 void FunctionCalculator::printFunctionList() {
-	m_ostr << '\n';
-	printFunctions();
-	m_ostr << "Enter command ('help' for the list of available commands): ";
+    m_ostr << '\n';
+    printFunctions();
+    m_ostr << "Enter command ('help' for the list of available commands): ";
 }
 
 void FunctionCalculator::run()
 {
-    
+
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
@@ -39,17 +34,17 @@ void FunctionCalculator::run()
             runAction(action);
         }
 
-       
+
         catch (std::out_of_range& e) {
             m_ostr << e.what() << std::endl;
         }
 
 
-      
 
-        catch (std::invalid_argument::exception &e) {
-           m_ostr<< e.what();
-           m_istr.handleInvalidArgument(m_ostr);
+
+        catch (std::invalid_argument::exception& e) {
+            m_ostr << e.what();
+            m_istr.handleInvalidArgument(m_ostr);
         }
     } while (m_running);
 }
@@ -60,12 +55,10 @@ void FunctionCalculator::eval()
         throw std::logic_error::exception("evaluate  requires 2 parmeters functions and the X");
     if (auto i = readFunctionIndex(); i)
     {
-        
-        
         auto x = 0.;
         m_istr >> x;
         auto sstr = std::ostringstream();
-       
+
         sstr << std::setprecision(2) << std::fixed << x;
         m_ostr << m_functions[*i]->to_string(sstr.str())
             << " = "
@@ -157,22 +150,38 @@ void FunctionCalculator::resize()
 		m_maxFunctions = newSize;
 }
 
+void FunctionCalculator::read() {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("read requires 1 parmeter");
+    auto fileName=std::string();
+    m_istr >> fileName;
+    std::ifstream *newF  = new std::ifstream ;//file pointer
+    newF->open(fileName);
+    if (!*newF)
+        throw std::invalid_argument::exception(("file : " + fileName + " doesn't exists,").data());
+    auto file = new FileHandler(newF, this, fileName);
+    m_istr.addStream(file);
+}
+
 //function for handling y/n requests from user
-//it goes throgh a loop and waits until a valid answer is recieved
+//it goes through a loop and waits until a valid answer is recieved
 bool FunctionCalculator::getYesNo(const std::string& requestMsg) {
     auto ans = std::string();
-    auto ansIsStupid = true;
-    while (ansIsStupid) {
+    auto invalidInput= true;
+    while (invalidInput) {
         m_ostr << requestMsg;
         std::getline(std::cin, ans);
         if (ans != "y" && ans != "n") {
-            std::cout << "Please enter y/n\n";
+            m_ostr << "Please enter y/n\n";
             continue;
         }
-        else return ans == "y";
+        invalidInput = false;
     }
+    return ans == "y";
 }
 
+//function for getting a valid value of size of the list
+//it iterates in a loop until a valid value is entered
 unsigned int FunctionCalculator::getValidListLength() {
     unsigned int num = 0;
     auto invalidAns = true;
@@ -186,6 +195,7 @@ unsigned int FunctionCalculator::getValidListLength() {
     return num;
 }
 
+//for printing the function list - is used once std::cin is getting a new line from user
 void FunctionCalculator::printFunctions() const
 {
     m_ostr << "List of available gates:\n";
@@ -253,18 +263,6 @@ void FunctionCalculator::runAction(Action action)
         }
 }
 
-void FunctionCalculator::read() {
-    if (!checkParam(2, m_istr.getLineRead()))
-        throw std::logic_error::exception("read requires 1 parmeter");
-    auto fileName=std::string();
-    m_istr >> fileName;
-    std::ifstream *newF  = new std::ifstream ;//file pointer
-    newF->open(fileName);
-    if (!*newF)
-        throw std::invalid_argument::exception(("file : " + fileName + " doesn't exists,").data());
-    auto file = new FileHandler(newF, this, fileName);
-    m_istr.addStream(file);
-}
 
 FunctionCalculator::ActionMap FunctionCalculator::createActions()
 {

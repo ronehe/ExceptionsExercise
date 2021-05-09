@@ -1,8 +1,9 @@
-resize 2
 add 1 0
 add 1 0
 resize s
-read Commands2.tx
 poly 4 1 2 S 5
 add 1 0
 add 1 0
+comp 1 0
+eval 6 3.14
+exit

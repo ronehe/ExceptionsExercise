@@ -8,7 +8,7 @@ int main()
 		FunctionCalculator(std::cin, std::cout).run();
 	}
 	catch (std::invalid_argument::exception& e) {
-		std::cout << "wrong size entered please try again\n";
+		std::cout << "wrong size entered please try again: \n";
 		main();
 	}
 }

@@ -5,7 +5,7 @@
 
 class FileHandler : public BaseStreamHandler {
 private:
-	std::string m_fileName;
+	std::string m_fileName; 
 public:
 	FileHandler(std::istream*, FunctionCalculator*, std::string&);
 	bool endReadingFromStream(std::ostream&, const std::string&) const override;

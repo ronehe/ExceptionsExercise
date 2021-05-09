@@ -9,9 +9,10 @@ Log::Log(int base, const std::shared_ptr<Function>& func)
 
 double Log::operator()(double x) const
 {
-    if (x <= 0)
-        throw std::invalid_argument::exception("invalid input for log");
-    return std::log((*m_func)(x)) / std::log(m_base);
+    double ans = (*m_func)(x);
+    if (ans <= 0)
+        throw std::invalid_argument::exception(("none, " + std::to_string(x)+" is invalid input for log").data());
+    return std::log(ans) / std::log(m_base);
 }
 
 std::string Log::to_string(const std::string& arg) const
