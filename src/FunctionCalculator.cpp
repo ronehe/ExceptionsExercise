@@ -4,15 +4,7 @@
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(new CinHandler(&istr, this))), m_ostr(ostr)
 {
-    unsigned int firstSize;
-    m_ostr << "please enter the max size functions between [2,100]  : ";
-    m_istr >> firstSize;
-    while (firstSize < 2 || firstSize > 100) {
-        std::cin.clear();
-        m_ostr << "please try a valid size (bigger  1 lower than 101)";
-        m_istr >> firstSize;
-    }
-    m_maxFunctions = firstSize;
+    m_maxFunctions=getValidListLength();
     m_istr.startRunning();
 }
 
@@ -138,8 +130,18 @@ void FunctionCalculator::resize()
         throw std::logic_error::exception("resize requires 1 parmeter: new size");
 	unsigned int newSize;
 	m_istr >> newSize;
+
+
+     if (!m_istr.lineIsEmpty()) {
+        m_ostr << "weird stuff as come up " << m_istr.getLineRead() << " is not a valid size please try again...\n";
+        m_istr.ignoreLine();
+        newSize = 1;
+    }
+
+
 	if (newSize < MIN_LIST_SIZE || newSize > MAX_LIST_SIZE)
 		m_istr.handleOutOfRange(newSize);
+
 
 	if (newSize > m_maxFunctions)
         m_maxFunctions = newSize;
@@ -194,16 +196,34 @@ unsigned int FunctionCalculator::getValidListLength() {
     m_istr.addStream(new CinHandler(&std::cin, this));
     unsigned int num = 0;
     while(true){
+      //  m_ostr << "please enter the max size functions between "<<"["<<MIN_LIST_SIZE<<","<<MAX_LIST_SIZE<<"]"<<":";
+
         m_ostr << "Enter a number between " << MIN_LIST_SIZE << "and " << MAX_LIST_SIZE << " : ";
         try {
+            m_istr.readNewLine();
             m_istr >> num;
-            m_istr.clear();
-            m_istr.ignoreLine();
+            if (2 > num || num > 100)
+                throw std::logic_error::exception(("excpected number between 2 and 100 but entered " + std::to_string(num)).data());
+            break;
         }
-        catch (std::exception& e) { continue; }
-        break;
+        //exception is caught from the operator >> overload and also used in the last line for comfort
+        catch (std::exception& e) {
+           // m_istr.clear();
+
+            m_ostr << e.what() << std::endl;
+            
+            continue; 
+        }
     }
-    m_istr.removeStream();
+    if (!m_istr.lineIsEmpty()) {
+        m_ostr << "weird stuff as come up "<<m_istr.getLineRead()<< " is not a valid size  please try again...\n";
+        m_istr.ignoreLine();
+       num= getValidListLength();
+    }
+
+  m_istr.removeStream();
+  m_istr.ignoreLine();
+
     return num;
 }
 
