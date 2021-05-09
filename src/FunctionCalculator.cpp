@@ -213,7 +213,8 @@ std::optional<int> FunctionCalculator::readFunctionIndex() const
     m_istr >> i;
     if (i >= m_functions.size())
     {
-        m_ostr << "Function #" << i << " doesn't exist\n";
+        throw std::invalid_argument::exception(("Function #" + std::to_string(i) + " doesn't exist").data());
+        //m_ostr << "Function #" << i << " doesn't exist\n";
         return {};
     }
     return i;
