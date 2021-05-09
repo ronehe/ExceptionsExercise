@@ -54,7 +54,7 @@ private:
         size_t len = bar.length();
         x.replace(pos, len, "");
         
-        if (!checkParam(3, m_istr.getLineRead()))
+        if (!checkParam(BINERIC_ARGS, m_istr.getLineRead()))
             throw std::logic_error::exception((x+" requires 2 parameters").data());
         if (auto f0 = readFunctionIndex(), f1 = readFunctionIndex(); f0 && f1)
         {
@@ -118,8 +118,7 @@ public:
 
 private:
     void read();
-    const unsigned int m_minListSize = 2;
-    const unsigned int m_maxListSize = 100;
+
 
 //~~~~~~~~~~~~~~members~~~~~~~~~~~~~~~~~~~~~~~~
 private:

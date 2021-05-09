@@ -71,8 +71,9 @@ void FunctionCalculator::poly()
 {
     auto n = 0;
     m_istr >> n;
+    const unsigned int POLY_ARGS=n+2;
     //sends the amount of line arguments which are supposed to be
-    if (!checkParam(n + 2, m_istr.getLineRead()))
+    if (!checkParam(POLY_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception(("reqired "+std::to_string(n)+" coefficents").data());
 
     auto coeffs = std::vector<double>(n);
@@ -86,7 +87,7 @@ void FunctionCalculator::poly()
 
 void FunctionCalculator::log()
 {
-    if (!checkParam(3, m_istr.getLineRead()))
+    if (!checkParam(LOG_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("log requires 2 parmeters : base, exponent");
     auto base = 0.;
     m_istr >> base;
@@ -101,7 +102,7 @@ void FunctionCalculator::log()
 
 void FunctionCalculator::del()
 {
-    if (!checkParam(2, m_istr.getLineRead()))
+    if (!checkParam(DEL_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("del(ete) requires 1 parmeter : the functions number");
     if (auto i = readFunctionIndex(); i)
     {
@@ -111,7 +112,7 @@ void FunctionCalculator::del()
 
 void FunctionCalculator::help()
 {
-    if (!checkParam(1, m_istr.getLineRead()))
+    if (!checkParam(HELP_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("help requires no parmeters");
     m_ostr << "The available commands are:\n";
     for (const auto& action : m_actions)
@@ -123,7 +124,7 @@ void FunctionCalculator::help()
 
 void FunctionCalculator::exit()
 {
-    if (!checkParam(1, m_istr.getLineRead()))
+    if (!checkParam(EXIT_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("exit requires no parmeters");
     m_ostr << "Goodbye!\n";
     m_running = false;
@@ -131,11 +132,11 @@ void FunctionCalculator::exit()
 
 void FunctionCalculator::resize()
 {
-    if (!checkParam(2, m_istr.getLineRead()))
+    if (!checkParam(RESIZE_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("resize requires 1 parmeter: new size");
 	unsigned int newSize;
 	m_istr >> newSize;
-	if (newSize < m_minListSize || newSize > m_maxListSize)
+	if (newSize < MIN_LIST_SIZE || newSize > MAX_LIST_SIZE)
 		m_istr.handleOutOfRange(newSize);
 
 	if (newSize > m_maxFunctions)
@@ -151,7 +152,7 @@ void FunctionCalculator::resize()
 }
 
 void FunctionCalculator::read() {
-    if (!checkParam(2, m_istr.getLineRead()))
+    if (!checkParam(READ_ARGS, m_istr.getLineRead()))
         throw std::logic_error::exception("read requires 1 parmeter");
     auto fileName=std::string();
     m_istr >> fileName;
@@ -186,11 +187,11 @@ unsigned int FunctionCalculator::getValidListLength() {
     unsigned int num = 0;
     auto invalidAns = true;
     do {
-        std::cout << "Enter a number between " << m_minListSize << "and " << m_maxListSize << " : ";
+        std::cout << "Enter a number between " << MIN_LIST_SIZE << "and " << MAX_LIST_SIZE << " : ";
         std::cin.clear();
         std::cin.ignore();
         if (!(std::cin >> num)) continue;
-    } while (num < m_minListSize || num > m_maxListSize);
+    } while (num < MIN_LIST_SIZE || num > MAX_LIST_SIZE);
     std::cin.ignore();
     return num;
 }
