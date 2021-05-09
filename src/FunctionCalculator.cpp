@@ -28,6 +28,7 @@ FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
             m_istr >> firstSize;
         }
         m_maxFunctions = firstSize;
+        m_istr.startRunning();
     
   
 }

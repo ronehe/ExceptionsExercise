@@ -4,7 +4,8 @@ CinHandler::CinHandler(std::istream* istr, FunctionCalculator* calc)
 	: BaseStreamHandler(istr, calc) {}
 
 bool CinHandler::getline(std::string& str) {
-	m_functionCalculator->printFunctionList();
+	if (m_isRunning)
+		m_functionCalculator->printFunctionList();
 	return BaseStreamHandler::getline(str);
 }
 
