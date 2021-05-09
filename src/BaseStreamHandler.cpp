@@ -10,3 +10,6 @@ bool BaseStreamHandler::getline(std::string& str) {
 	return false;
 }
 
+void BaseStreamHandler::startRunning() {
+	m_isRunning = true;
+}

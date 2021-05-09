@@ -49,6 +49,10 @@ a file or any istrem inherited class.
 
 <after effects> :removes the stream if ended inserts in the new line - from getline.
 */
+
+void InputHandler::startRunning() {
+	m_streams->top()->startRunning();
+}
 void InputHandler::readNewLine() const{
 	auto temp = std::string();
 	//as long as it is possible to get lines
