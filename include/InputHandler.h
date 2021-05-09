@@ -20,6 +20,7 @@ public:
 	bool handleOverloadFunctionList();
 	void clear();
 	bool lineIsEmpty()const;
+	void startRunning();
 
 	template<typename T>
 	friend void operator>>(const InputHandler&, T&);
