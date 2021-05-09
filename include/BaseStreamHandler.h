@@ -21,4 +21,5 @@ public:
 	virtual bool handleOverloadFunctionList() const = 0;
 	//for indicating if calculator is running properly
 	void startRunning();
+	virtual ~BaseStreamHandler();
 };
