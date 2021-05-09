@@ -1,6 +1,8 @@
 resize 2
 add 1 0
 add 1 0
-read Commands2.txt
+resize s
+read Commands2.tx
+poly 4 1 2 S 5
 add 1 0
 add 1 0

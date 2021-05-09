@@ -1,5 +1,5 @@
 #include "Log.h"
-
+#include <iostream>
 #include <cmath>
 
 Log::Log(int base, const std::shared_ptr<Function>& func)
@@ -9,6 +9,8 @@ Log::Log(int base, const std::shared_ptr<Function>& func)
 
 double Log::operator()(double x) const
 {
+    if (x <= 0)
+        throw std::invalid_argument::exception("invalid input for log");
     return std::log((*m_func)(x)) / std::log(m_base);
 }
 

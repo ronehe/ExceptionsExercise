@@ -27,10 +27,21 @@ private:
     void help();
     void exit();
     void resize();
+    
+    bool checkParam( const unsigned int & argu, const std::string& lineOfData);
+
 
     template <typename FuncType>
     void binaryFunc()
     {
+        std::string x(typeid(FuncType).name());
+        std::string bar = "class ";
+        size_t pos = x.find(bar);
+        size_t len = bar.length();
+        x.replace(pos, len, "");
+        
+        if (!checkParam(3, m_istr.getLineRead()))
+            throw std::logic_error::exception((x+" requires 2 parameters").data());
         if (auto f0 = readFunctionIndex(), f1 = readFunctionIndex(); f0 && f1)
         {
             (m_functions.size() < m_maxFunctions) ?

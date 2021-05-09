@@ -1,2 +1,2 @@
-comp 1 0
-comp 1 0
+comp 0 1
+lo 4 1

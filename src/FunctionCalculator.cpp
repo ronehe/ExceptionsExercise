@@ -17,7 +17,22 @@
 FunctionCalculator::FunctionCalculator(std::istream& istr, std::ostream& ostr)
     : m_actions(createActions()), m_functions(createFunctions()), m_istr(InputHandler(new CinHandler(&istr, this))), m_ostr(ostr)
 {
+    
+        unsigned int firstSize;
+        m_ostr << "please enter the max size functions between [2,100]  : ";
+        m_istr >> firstSize;
+        while (firstSize < 2 || firstSize > 100) {
+
+            std::cin.clear();
+            m_ostr << "please try a valid size (bigger  1 lower than 101)";
+            m_istr >> firstSize;
+        }
+        m_maxFunctions = firstSize;
+    
+  
 }
+
+
 
 void FunctionCalculator::printFunctionList() {
 	m_ostr << '\n';
@@ -27,6 +42,7 @@ void FunctionCalculator::printFunctionList() {
 
 void FunctionCalculator::run()
 {
+    
     m_ostr << std::setprecision(2) << std::fixed;
     do
     {
@@ -48,17 +64,23 @@ void FunctionCalculator::run()
         catch (std::invalid_argument::exception &e) {
            m_ostr<< e.what();
            m_istr.handleInvalidArgument(m_ostr);
+            
         }
     } while (m_running);
 }
 
 void FunctionCalculator::eval()
 {
+    if (!checkParam(3, m_istr.getLineRead()))
+        throw std::logic_error::exception("evaluate  requires 2 parmeters functions and the X");
     if (auto i = readFunctionIndex(); i)
     {
+        
+        
         auto x = 0.;
         m_istr >> x;
         auto sstr = std::ostringstream();
+       
         sstr << std::setprecision(2) << std::fixed << x;
         m_ostr << m_functions[*i]->to_string(sstr.str())
             << " = "
@@ -71,6 +93,10 @@ void FunctionCalculator::poly()
 {
     auto n = 0;
     m_istr >> n;
+    //sends the amount of line arguments which are supposed to be
+    if (!checkParam(n + 2, m_istr.getLineRead()))
+        throw std::logic_error::exception(("reqired "+std::to_string(n)+" coefficents").data());
+
     auto coeffs = std::vector<double>(n);
     for (auto& coeff : coeffs){
         m_istr >> coeff;
@@ -82,9 +108,11 @@ void FunctionCalculator::poly()
 
 void FunctionCalculator::log()
 {
-    auto base = 0;
+    if (!checkParam(3, m_istr.getLineRead()))
+        throw std::logic_error::exception("log requires 2 parmeters : base, exponent");
+    auto base = 0.;
     m_istr >> base;
-    if (base <=1)throw std::invalid_argument::exception("base of log suppose to be higher then one");
+    if (base ==1 ||base <=0)throw std::logic_error::exception("base of log suppose to be bigger than zero and diffrent then one");
     if (auto f = readFunctionIndex(); f)
     {
         (m_maxFunctions > m_functions.size()) ?
@@ -95,6 +123,8 @@ void FunctionCalculator::log()
 
 void FunctionCalculator::del()
 {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("del(ete) requires 1 parmeter : the functions number");
     if (auto i = readFunctionIndex(); i)
     {
         m_functions.erase(m_functions.begin() + *i);
@@ -103,6 +133,8 @@ void FunctionCalculator::del()
 
 void FunctionCalculator::help()
 {
+    if (!checkParam(1, m_istr.getLineRead()))
+        throw std::logic_error::exception("help requires no parmeters");
     m_ostr << "The available commands are:\n";
     for (const auto& action : m_actions)
     {
@@ -113,12 +145,16 @@ void FunctionCalculator::help()
 
 void FunctionCalculator::exit()
 {
+    if (!checkParam(1, m_istr.getLineRead()))
+        throw std::logic_error::exception("exit requires no parmeters");
     m_ostr << "Goodbye!\n";
     m_running = false;
 }
 
 void FunctionCalculator::resize()
 {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("resize requires 1 parmeter: new size");
 	unsigned int newSize;
 	m_istr >> newSize;
 	if (newSize < m_minListSize || newSize > m_maxListSize)
@@ -233,10 +269,14 @@ void FunctionCalculator::runAction(Action action)
 }
 
 void FunctionCalculator::read() {
+    if (!checkParam(2, m_istr.getLineRead()))
+        throw std::logic_error::exception("read requires 1 parmeter");
     auto fileName=std::string();
     m_istr >> fileName;
     std::ifstream *newF  = new std::ifstream ;//file pointer
     newF->open(fileName);
+    if (!*newF)
+        throw std::invalid_argument::exception(("file : " + fileName + " doesn't exists,").data());
     
     auto file = new FileHandler(newF, this, fileName);
     m_istr.addStream(file);
@@ -296,12 +336,12 @@ FunctionCalculator::ActionMap FunctionCalculator::createActions()
         },
         {
             "resize",
-            " -resize the size of the list",
+            " num - resize the size of the list to max #num",
             Action::Resize
         },
         {
             "read",
-            " -read from file",
+            " fileName - read from file #fileName",
             Action::Read
         }
     };
@@ -314,4 +354,22 @@ FunctionCalculator::FunctionList FunctionCalculator::createFunctions()
         std::make_shared<Sin>(),
         std::make_shared<Ln>()
     };
+}
+//creating a defalut check for amount of arguments 
+
+
+/// <summary>
+/// 
+/// </summary>
+/// <param name="numOfArguments"> num of arguments for the requested function +the name of the function{ num of arg + 1} </param>
+/// <param name="lineOfData">the line for which the function requested</param>
+bool FunctionCalculator::checkParam(const unsigned int & numOfArguments,const std::string& lineOfData) {
+    std::stringstream cur(lineOfData);
+    std::string temp;
+    unsigned int counter=0;
+    while (cur >> temp) {
+        counter++;
+    }
+    return(counter == numOfArguments);
+
 }
